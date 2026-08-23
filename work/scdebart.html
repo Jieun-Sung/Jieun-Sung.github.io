@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>scDEBART — Jieun Sung</title>
-<meta name="description" content="scDEBART: a BART encoder-decoder foundation model predicting single-cell perturbation responses as log fold-changes.">
+<meta name="description" content="scDEBART: a BART encoder-decoder pretrained to predict single-cell perturbation responses as log fold-changes.">
 <meta name="author" content="Jieun Sung">
 <link rel="canonical" href="https://jieun-sung.github.io/work/scdebart.html">
 
@@ -21,17 +21,17 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ================= TOP TAB BAR ================= -->
 <div class="topbar">
   <div class="topbar__inner">
     <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
     <nav class="nav" aria-label="Sections">
       <a class="nav__item" href="../index.html#research">&larr;&nbsp;All work</a>
       <a class="nav__item" href="#problem">Problem</a>
+      <a class="nav__item" href="#corpus">Corpus</a>
       <a class="nav__item" href="#approach">Approach</a>
       <a class="nav__item" href="#results">Results</a>
-      <a class="nav__item" href="#technical">Technical</a>
-      <a class="nav__item" href="#repro">Reproducibility</a>
+      <a class="nav__item" href="#takeaway">Takeaway</a>
+      <a class="nav__item" href="#cite">Citation</a>
     </nav>
   </div>
 </div>
@@ -39,118 +39,77 @@
 <div class="shell shell--single">
   <main class="main detail" id="main">
 
-    <!-- ---------- Head ---------- -->
     <header class="detail__head">
       <div class="entry__meta">
         <span class="status status--published">ICML 2026</span>
         <span class="entry__year">2026</span>
       </div>
       <h1 class="detail__title">scDEBART</h1>
-      <p class="detail__lede">A BART encoder&ndash;decoder foundation model for single-cell perturbation response. It reframes the pretraining objective from reconstructing absolute expression to predicting log fold-changes conditioned on basal expression, which lets it generalize inductively to perturbations it has never seen.</p>
+      <p class="detail__lede">A foundation model for single-cell perturbation response. It moves the pretraining target from absolute expression to the log fold-change a perturbation produces, conditioned on basal expression &mdash; so the model learns how genes co-regulate <em>under change</em> rather than how they co-vary at rest.</p>
+      <p class="detail__authors">Jieun Sung, Wankyu Kim &middot; ICML 2026, COEX, Seoul</p>
       <ul class="metrics">
         <li>6.28M DE profiles / 66.6M cells</li>
-        <li>4&ndash;7&times; top-gene recovery</li>
         <li>71.4% top-1 reverse perturbation</li>
+        <li>452 GPU-hours on 4&times;H100</li>
       </ul>
       <ul class="linkrow">
-        <li><a href="https://openreview.net/forum?id=pJyidZg93y">Paper</a></li>
+        <li><a href="https://openreview.net/forum?id=pJyidZg93y">Paper (OpenReview)</a></li>
         <li><a href="../assets/posters/2026-07-icml-scdebart.pdf">Poster</a></li>
         <li><a href="https://github.com/Jieun-Sung/scDEBART">Code</a></li>
       </ul>
-      <p class="entry__note">Provisional patent application filed, Republic of Korea &mdash; No. 10-2026-0094556.</p>
     </header>
 
-    <!-- ---------- Problem ---------- -->
+    <figure class="figure figure--hero">
+      <img src="../assets/img/thumbs/scdebart.png" alt="scDEBART corpus construction, architecture and benchmark results" width="1400" height="593">
+      <figcaption>Corpus construction, architecture, and the three evaluations: perturbation response prediction, reverse perturbation identification, and genetic&rarr;drug transfer.</figcaption>
+    </figure>
+
     <section class="section detail__section" id="problem">
       <h2>Problem</h2>
-      <div class="todo">
-        What question does this work answer, and why did existing methods not
-        answer it? Two or three paragraphs. State the gap concretely enough
-        that a reader can judge whether the result matters.
-      </div>
+      <p>Single-cell foundation models such as scGPT and GeneFormer have not outperformed simple linear baselines on perturbation prediction (Ahlmann-Eltze et al., 2025). That result is worth taking seriously: if scale alone were the answer, it should already have shown up.</p>
+      <p>Two design choices look responsible, and both concern <em>what</em> the model is asked to predict.</p>      <ul class="bullets">
+        <li><strong>The target is dropout-prone.</strong> Models predict absolute expression, and fold changes are computed afterwards from those predictions. Single-cell counts are dominated by zeros, so a post-hoc ratio between two noisy small numbers is unstable exactly where the biology is most interesting.</li>
+        <li><strong>The pretraining task is static.</strong> Reconstructing expression teaches within-cell co-expression &mdash; which genes are on together in a resting cell. Perturbation asks a different question: which genes <em>move together</em> when something is pushed. Co-expression at rest is a weak prior for co-regulation under change.</li>
+      </ul>      <p>scDEBART changes the objective rather than the scale: pretrain directly on population-level log fold-change conditioned on basal expression, so regulatory co-variation across millions of contexts becomes the inductive bias the model brings to a new perturbation.</p>
     </section>
 
-    <!-- ---------- Approach ---------- -->
+    <section class="section detail__section" id="corpus">
+      <h2>Building the DE corpus</h2>
+      <p>No corpus of differential-expression profiles existed at the scale pretraining needs, so the first half of the work was building one from CELLxGENE.</p>      <ul class="bullets">
+        <li>Filtered to <strong>617 datasets</strong>, 66.6M cells across 61 tissues, after quality control.</li>
+        <li>Grouped cells within each dataset by SECUER density-based clustering, giving <strong>98,753 clusters</strong> at a median of 278 cells per cluster.</li>
+        <li>Computed cluster-pair differential expression with scVI posterior sampling, retaining genes with DE probability &ge; 0.8, detection rate &ge; 0.3, and |logFC| &ge; 1.5.</li>
+        <li>Result: <strong>6.28M DE profiles</strong> over 17,944 genes.</li>
+      </ul>      <p>The detection-rate filter matters more than it looks. Baselines routinely rank low-detection genes as top differentially expressed genes &mdash; a dropout artifact rather than signal. Pruning them is a step prior work skips, and it accounts for part of the gap in the DEG-overlap results below.</p>
+    </section>
+
     <section class="section detail__section" id="approach">
-      <h2>Approach</h2>
-      <div class="todo">
-        The method, in prose first and detail second. What goes in, what the
-        model does to it, what comes out. Name the key design decision and say
-        what it buys you.
-      </div>
-
-      <figure class="figure">
-        <div class="figure__slot">
-          Architecture / overview figure &mdash; put the image at
-          <code>assets/img/scdebart-architecture.png</code> and replace this
-          block with an <code>&lt;img&gt;</code>
-        </div>
-        <figcaption>
-          Caption: state what the reader should take away from the figure, not
-          what it depicts.
-        </figcaption>
-      </figure>
-    </section>
-
-    <!-- ---------- Results ---------- -->
-    <section class="section detail__section" id="results">
-      <h2>Results</h2>
-      <div class="todo">
-        Lead with the headline number and the comparison that makes it
-        meaningful, then the table. Mark the best value in each column with
-        <code>class="is-best"</code>.
-      </div>
-
-      <div class="table-wrap">
-        <table class="table">
-          <caption class="visually-hidden">scDEBART benchmark results</caption>
-          <thead>
-            <tr>
-              <th scope="col">Method</th>
-              <th scope="col">Top-gene recovery</th>
-              <th scope="col">Top-1 reverse perturbation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">scDEBART</th>
-              <td><span class="is-best">TODO</span></td>
-              <td><span class="is-best">71.4%</span></td>
-            </tr>
-            <tr>
-              <th scope="row">Baseline &mdash; TODO</th>
-              <td>&mdash;</td>
-              <td>&mdash;</td>
-            </tr>
-            <tr>
-              <th scope="row">Baseline &mdash; TODO</th>
-              <td>&mdash;</td>
-              <td>&mdash;</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ---------- Technical details ---------- -->
-    <section class="section detail__section" id="technical">
-      <h2>Technical details</h2>
-      <dl class="specs">
+      <h2>Architecture and training</h2>
+      <p>Each gene enters as one token, fusing four features so that the model has both what the gene is and what it is currently doing:</p>      <ul class="bullets">
+        <li>MSigDB C2 pathway membership</li>
+        <li>BioBERT embedding of the gene summary text</li>
+        <li>scVI log fold-change</li>
+        <li>log baseline expression</li>
+      </ul>      <p>Pretraining masks 15% of gene logFCs and reconstructs both the logFC and the embedding. Fine-tuning on Perturb-seq adds a &plusmn;10 perturbation indicator distinguishing activation from inhibition, under a weighted-MSE plus correlation loss.</p>      <dl class="specs">
         <div>
           <dt>Architecture</dt>
-          <dd>BART encoder&ndash;decoder</dd>
+          <dd>BART encoder&ndash;decoder, 8 encoder + 4 decoder layers, 12 heads, d = 768</dd>
         </div>
         <div>
           <dt>Pretraining objective</dt>
-          <dd>log fold-change conditioned on basal expression</dd>
+          <dd>masked logFC reconstruction conditioned on basal expression</dd>
         </div>
         <div>
           <dt>Pretraining corpus</dt>
-          <dd>617 datasets &middot; 6.28M DE profiles &middot; 66.6M cells</dd>
+          <dd>6.28M DE profiles &middot; 66.6M cells &middot; 617 datasets &middot; 17,944 genes</dd>
         </div>
         <div>
-          <dt>Evaluation</dt>
-          <dd>CRISPRi and CRISPRa datasets</dd>
+          <dt>Fine-tuning</dt>
+          <dd>Perturb-seq, &plusmn;10 activate/inhibit indicator</dd>
+        </div>
+        <div>
+          <dt>Loss</dt>
+          <dd>weighted MSE + correlation</dd>
         </div>
         <div>
           <dt>Hardware</dt>
@@ -160,32 +119,51 @@
           <dt>Compute</dt>
           <dd>452 GPU-hours</dd>
         </div>
-        <div>
-          <dt>Parameters</dt>
-          <dd>TODO</dd>
-        </div>
-        <div>
-          <dt>Framework</dt>
-          <dd>TODO &mdash; PyTorch and Transformers versions</dd>
-        </div>
       </dl>
     </section>
 
-    <!-- ---------- Reproducibility ---------- -->
-    <section class="section detail__section" id="repro">
-      <h2>Reproducibility</h2>
-      <div class="todo">
-        Where the code and data live, and the shortest path from a clean
-        checkout to the headline number.
-      </div>
-
-      <pre class="code"><code>git clone https://github.com/Jieun-Sung/scDEBART
-cd scdebart
-# TODO: environment setup + entry point
-</code></pre>
+    <section class="section detail__section" id="results">
+      <h2>Results</h2>
+      <p><strong>1. Perturbation response prediction.</strong> Evaluated across five Perturb-seq datasets &mdash; Norman K562, Replogle K562 and RPE1, Nadig HepG2 and Jurkat &mdash; on four complementary metrics: logFC correlation (do predicted genes move in the right direction), logFC RMSE (are the magnitudes right), DEG overlap (are the true top genes ranked at the top), and DEG direction F1 (are up/down calls correct at 1.2-fold). scDEBART gave the best DEG recovery on all five, with a 4&ndash;7&times; enrichment factor over the strongest baselines.</p>      <p><strong>2. Reverse perturbation identification.</strong> Given an observed logFC profile, infer which gene or genes were perturbed. This is the sharper test, because it asks whether predicted profiles are specific enough to invert.</p>      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col">Top-1 exact match</th>
+              <th scope="col">Partial match</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">scDEBART</th>
+              <td><span class="is-best">71.4%</span></td>
+              <td><span class="is-best">100%</span></td>
+            </tr>
+            <tr>
+              <th scope="row">GEARS</th>
+              <td>0%</td>
+              <td>42.9%</td>
+            </tr>
+            <tr>
+              <th scope="row">scGPT</th>
+              <td>0%</td>
+              <td>0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>      <p><strong>3. Cross-modal transfer, genetic &rarr; drug.</strong> A model trained only on Replogle K562 genetic perturbations was applied to drug responses with no drug-specific training, by simulating an inhibitor as a multi-gene knockdown. Agreement rose with dose &mdash; cosine similarity 0.04 to 0.30 across 10 to 10,000 nM, enrichment factor 2.91&ndash;4.32 &mdash; consistently above scVI-scGPT. Dose dependence is the useful part: a model exploiting a spurious shortcut would not track dose.</p>
     </section>
 
-    <!-- ---------- Citation ---------- -->
+    <section class="section detail__section" id="takeaway">
+      <h2>What this establishes</h2>
+      <ul class="bullets">
+        <li>Change-based supervision is a stronger inductive bias for perturbation than reconstruction of absolute expression, at matched scale.</li>
+        <li>Dropout filtering is not housekeeping. Unfiltered corpora put low-detection genes at the top of DEG rankings, and baselines inherit those false positives.</li>
+        <li>Predicted profiles are specific enough to invert, which is what makes in silico screening plausible rather than merely descriptive.</li>
+        <li>A genetic-perturbation model transfers to pharmacological perturbation without retraining &mdash; the direction that matters for drug discovery.</li>
+      </ul>
+    </section>
+
     <section class="section detail__section" id="cite">
       <h2>Citation</h2>
       <pre class="code"><code>@inproceedings{sung2026scdebart,
@@ -195,7 +173,7 @@ cd scdebart
   booktitle = {Proceedings of the 43rd International Conference on
                Machine Learning (ICML)},
   year      = {2026}
-}</code></pre>
+}</code></pre>      <p>Provisional patent application filed, Republic of Korea &mdash; No. 10-2026-0094556, 26 May 2026. Assignee: Ewha Womans University.</p>
     </section>
 
     <footer class="footer">

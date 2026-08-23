@@ -1,6 +1,12 @@
 # Editable CV source — only the exported PDF is published.
 assets/cv/*.docx
 
+# Source figures and manuscript drafts. The originals are print-resolution
+# (scDEBART is ~100 megapixels) and the manuscripts are unpublished drafts,
+# so neither belongs in a public repo. The web-sized figures generated from
+# these live in assets/img/thumbs/ and ARE committed.
+assets/thumbnails/
+
 # Dropbox / OS noise
 *.sync-conflict-*
 * (conflicted copy *).*

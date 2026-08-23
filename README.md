@@ -9,15 +9,21 @@ work/                one page per research entry, opened in a new tab
   tdep.html
   fatedriver.html
   tdem.html
+  ic50-ensemble.html
 assets/
   css/tokens.css     design tokens — the only place raw values live
   css/style.css      components, built from tokens
   js/main.js         tab scroll-spy, footer year
   img/favicon.svg
+  img/thumbs/        web-sized entry figures (generated, committed)
   img/portrait.jpg   ← not yet added
   cv/Jieun-Sung-CV.pdf
   posters/           poster PDFs — see posters/README.md
 DESIGN.md            token + component reference
+
+Not committed (see .gitignore): assets/thumbnails/ holds the print-resolution
+source figures and the manuscript drafts they came from. The committed
+thumbnails in assets/img/thumbs/ are downscaled copies capped at 1400px wide.
 ```
 
 ## Deploy

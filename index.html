@@ -82,18 +82,16 @@
       <div class="prose hero__prose">
         <p>
           I am an integrated M.S.&ndash;Ph.D. candidate in Bioinformatics at Ewha
-          Womans University, advised by Prof. Wankyu Kim in the
-          <a href="https://cmsfox.ewha.ac.kr/syspharm/index.do">Systems Pharmacology
-          Laboratory</a>.
+          Womans University, Seoul, South Korea, advised by Prof. Wankyu Kim in
+          the <a href="https://cmsfox.ewha.ac.kr/syspharm/index.do">Systems
+          Pharmacology Laboratory</a>.
         </p>
         <p>
-          My research applies deep learning to single-cell perturbation biology:
-          predicting how a transcriptome shifts under genetic or pharmacological
-          perturbation, and tracing those shifts back to the targets that caused
-          them. Building models that make in silico perturbation experiments
-          genuinely useful to drug discovery is what I find most interesting about
-          this field, and I intend to keep working at that intersection of machine
-          learning and pharmacology.
+          My research focuses on AI-driven drug and target discovery. I use
+          transcriptomic shifts induced by genetic or pharmacological
+          perturbations to identify potential therapeutic targets with AI. What
+          interests me most is building foundation models that make in silico
+          perturbation experiments genuinely useful for drug discovery.
         </p>
       </div>
     </section>
@@ -103,6 +101,9 @@
       <div class="section__head">
         <p class="eyebrow">Research</p>
         <h2 class="section__title">Selected work</h2>
+        <p class="section__note">
+          Click a figure to open the full method, results and technical detail.
+        </p>
       </div>
 
       <article class="entry">
@@ -112,19 +113,19 @@
         </div>
         <div class="entry__body">
           <h3 class="entry__title"><a href="work/scdebart.html" target="_blank" rel="noopener">scDEBART</a></h3>
+          <a class="entry__thumb" href="work/scdebart.html" target="_blank" rel="noopener"
+             aria-label="scDEBART — open the full write-up">
+            <img src="assets/img/thumbs/scdebart.png" alt="scDEBART architecture and benchmark results"
+                 width="1400" height="593" loading="lazy">
+          </a>
           <p class="entry__lede">
-            A BART encoder&ndash;decoder foundation model for single-cell
-            perturbation response. It reframes the pretraining objective from
-            reconstructing absolute expression to predicting log fold-changes
-            conditioned on basal expression, which lets it generalize inductively
-            to perturbations it has never seen. Pretrained on a corpus I curated
-            from 617 datasets, on 4&times;H100 with DeepSpeed ZeRO-3 (452 GPU-hours),
-            and evaluated across CRISPRi and CRISPRa datasets.
+            A foundation model for single-cell perturbation response, pretrained
+            to predict log fold-changes rather than absolute expression.
           </p>
           <ul class="metrics">
             <li>6.28M DE profiles / 66.6M cells</li>
-            <li>4&ndash;7&times; top-gene recovery</li>
             <li>71.4% top-1 reverse perturbation</li>
+            <li>Best DEG recovery on 5 datasets</li>
           </ul>
           <ul class="linkrow">
             <li><a href="https://openreview.net/forum?id=pJyidZg93y">Paper</a></li>
@@ -146,16 +147,19 @@
         </div>
         <div class="entry__body">
           <h3 class="entry__title"><a href="work/tdep.html" target="_blank" rel="noopener">TDEP</a></h3>
+          <a class="entry__thumb" href="work/tdep.html" target="_blank" rel="noopener"
+             aria-label="TDEP — open the full write-up">
+            <img src="assets/img/thumbs/tdep.png" alt="TDEP model architecture and evaluation"
+                 width="1400" height="535" loading="lazy">
+          </a>
           <p class="entry__lede">
-            Maps drug-induced transcriptomic signatures onto target-specific
-            perturbation responses, so that gene-level target effects can be
-            inferred in silico from large-scale pharmacological data. Benchmarked
-            against training-free retrieval baselines at both profile and pair level.
+            Predicts the transcriptome-wide response to inhibiting a target, so a
+            drug&ndash;target call arrives with a gene-level account of why.
           </p>
           <ul class="metrics">
-            <li>AUROC 0.846 profile</li>
-            <li>AUROC 0.873 pair</li>
-            <li>1-NN baseline 0.671 / 0.729</li>
+            <li>AUROC 0.873 unseen drug</li>
+            <li>DrugBAN 0.848 / ssGCN 0.593</li>
+            <li>10,086 genes per profile</li>
           </ul>
           <ul class="linkrow">
             <li><a href="assets/posters/2025-10-ksbi-tdep.pdf">Poster</a></li>
@@ -172,15 +176,24 @@
         </div>
         <div class="entry__body">
           <h3 class="entry__title"><a href="work/fatedriver.html" target="_blank" rel="noopener">FateDriver</a></h3>
+          <a class="entry__thumb" href="work/fatedriver.html" target="_blank" rel="noopener"
+             aria-label="FateDriver — open the full write-up">
+            <img src="assets/img/thumbs/fatedriver.png" alt="FateDriver dual-view graph encoder"
+                 width="1400" height="402" loading="lazy">
+          </a>
           <p class="entry__lede">
-            A dual-view graph neural network that models cell-state transitions and
-            gene regulatory structure jointly to identify candidate driver genes of
-            transcription factor-induced cellular reprogramming.
+            Learns from the reprogramming factors a protocol delivers, then
+            returns the endogenous genes that align the same way.
           </p>
-          <p class="entry__note">Co-first author.</p>
+          <ul class="metrics">
+            <li>Curated-regulator AUROC 0.93</li>
+            <li>3 datasets / 2 conversion systems</li>
+            <li>Ranks all 3,000 genes</li>
+          </ul>
           <ul class="linkrow">
             <li><a href="assets/posters/2026-08-ksscr-fatedriver.pdf">Poster</a></li>
           </ul>
+          <p class="entry__note">Co-first author.</p>
         </div>
       </article>
 
@@ -191,14 +204,56 @@
         </div>
         <div class="entry__body">
           <h3 class="entry__title"><a href="work/tdem.html" target="_blank" rel="noopener">TDEM</a></h3>
+          <a class="entry__thumb" href="work/tdem.html" target="_blank" rel="noopener"
+             aria-label="TDEM — open the full write-up">
+            <img src="assets/img/thumbs/tdem.png" alt="TDEM target-by-gene effect matrix"
+                 width="1400" height="807" loading="lazy">
+          </a>
           <p class="entry__lede">
-            Deconvolves drug-induced transcriptomes into target-specific
-            perturbation profiles by matrix factorization &mdash; the line of work
-            this lab research started from, and the basis for TDEP.
+            Tests whether drug-induced transcriptomes really decompose into
+            target-level effects &mdash; an assumption the field relies on and
+            rarely checks.
           </p>
+          <ul class="metrics">
+            <li>902 compounds / 836 targets</li>
+            <li>Target recovery AUROC 0.852</li>
+            <li>0.591 on inferred expression</li>
+          </ul>
           <ul class="linkrow">
             <li><a href="assets/posters/2024-01-kogo-tdem.pdf">Poster</a></li>
           </ul>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry__meta">
+          <span class="status status--award">Third place</span>
+          <span class="entry__year">2025</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title"><a href="work/ic50-ensemble.html" target="_blank" rel="noopener">BLAST-weighted IC50 ensemble</a></h3>
+          <a class="entry__thumb" href="work/ic50-ensemble.html" target="_blank" rel="noopener"
+             aria-label="BLAST-weighted IC50 ensemble — open the full write-up">
+            <img src="assets/img/thumbs/ic50-ensemble.png" alt="Uncertainty-aware BLAST-weighted ensemble for IC50 prediction"
+                 width="1400" height="680" loading="lazy">
+          </a>
+          <p class="entry__lede">
+            MAP3K5 inhibitor potency predicted from structure alone, by borrowing
+            labelled data from homologous kinases and weighting it by sequence
+            similarity.
+          </p>
+          <ul class="metrics">
+            <li>3rd of 1,137 participants</li>
+            <li>381,152 IC50 measurements</li>
+            <li>Private score 0.648</li>
+          </ul>
+          <ul class="linkrow">
+            <li><a href="assets/posters/2025-10-dacon-ic50.pdf">Poster</a></li>
+          </ul>
+          <p class="entry__note">
+            3rd AI Drug Discovery Competition, Korea Pharmaceutical and
+            Bio-Pharma Association.
+          </p>
         </div>
       </article>
     </section>
@@ -298,7 +353,7 @@
           </p>
           <p class="pub__title">
             FateDriver: A Dual-View Graph Neural Network for Predicting Driver Genes
-            in Transcription Factor-Induced Cellular Reprogramming
+            in Cellular Reprogramming
           </p>
           <p class="pub__venue">Manuscript in preparation &middot; *equal contribution</p>
         </li>
@@ -306,8 +361,8 @@
         <li class="pub">
           <p class="pub__authors"><strong>Sung, J.</strong> and Kim, W.</p>
           <p class="pub__title">
-            TDEM: Deconvolving Drug-Induced Transcriptomes into Target-Specific
-            Perturbation Profiles via Matrix Factorization
+            Drug-induced transcriptomes decompose additively into target-level
+            effects, but only when expression is measured rather than inferred
           </p>
           <p class="pub__venue">Manuscript in preparation</p>
         </li>
@@ -402,6 +457,9 @@
           <div>
             <p class="record__title">Uncertainty-aware BLAST-weighted ensemble for IC50 prediction</p>
             <p class="record__detail">3rd AI Drug Discovery Competition &middot; Poster</p>
+            <ul class="linkrow">
+              <li><a href="assets/posters/2025-10-dacon-ic50.pdf">Poster PDF</a></li>
+            </ul>
           </div>
         </li>
         <li class="record record--tight">

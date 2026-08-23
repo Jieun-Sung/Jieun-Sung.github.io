@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FateDriver — Jieun Sung</title>
-<meta name="description" content="FateDriver: a dual-view graph neural network for driver genes in transcription factor-induced cellular reprogramming.">
+<meta name="description" content="FateDriver: a dual-view graph neural network that learns from delivered reprogramming factors to rank endogenous driver genes.">
 <meta name="author" content="Jieun Sung">
 <link rel="canonical" href="https://jieun-sung.github.io/work/fatedriver.html">
 
@@ -21,7 +21,6 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ================= TOP TAB BAR ================= -->
 <div class="topbar">
   <div class="topbar__inner">
     <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
@@ -30,8 +29,8 @@
       <a class="nav__item" href="#problem">Problem</a>
       <a class="nav__item" href="#approach">Approach</a>
       <a class="nav__item" href="#results">Results</a>
-      <a class="nav__item" href="#technical">Technical</a>
       <a class="nav__item" href="#repro">Reproducibility</a>
+      <a class="nav__item" href="#cite">Citation</a>
     </nav>
   </div>
 </div>
@@ -39,146 +38,130 @@
 <div class="shell shell--single">
   <main class="main detail" id="main">
 
-    <!-- ---------- Head ---------- -->
     <header class="detail__head">
       <div class="entry__meta">
         <span class="status status--prep">In preparation</span>
         <span class="entry__year">2026</span>
       </div>
       <h1 class="detail__title">FateDriver</h1>
-      <p class="detail__lede">A dual-view graph neural network that models cell-state transitions and gene regulatory structure jointly to identify candidate driver genes of transcription factor-induced cellular reprogramming.</p>
+      <p class="detail__lede">Reprogramming protocols deliver a handful of transcription factors, but the endogenous regulators working alongside them are only partly known. FateDriver takes the delivered factors as its positive labels, learns how they align with the source&rarr;target direction, and returns the unlabeled genes that align the same way.</p>
+      <p class="detail__authors">Jieun Sung*, Kyuwon Son*, Hyuk-Jin Cha, Wankyu Kim, Haeseung Lee &middot; *equal contribution &middot; in preparation</p>
+      <ul class="metrics">
+        <li>Curated-regulator AUROC 0.93</li>
+        <li>Delivered factors ranked 2.0&ndash;5.0 of 3,000</li>
+        <li>3 datasets / 2 conversion systems</li>
+      </ul>
       <ul class="linkrow">
         <li><a href="../assets/posters/2026-08-ksscr-fatedriver.pdf">Poster</a></li>
       </ul>
-      <p class="entry__note">Co-first author.</p>
     </header>
 
-    <!-- ---------- Problem ---------- -->
+    <figure class="figure figure--hero">
+      <img src="../assets/img/thumbs/fatedriver.png" alt="FateDriver dual-view graph encoder over cells and genes" width="1400" height="402">
+      <figcaption>A dual-view graph encoder places cells and genes in one shared space, so a gene can be scored against the direction of a transition between cell states.</figcaption>
+    </figure>
+
     <section class="section detail__section" id="problem">
       <h2>Problem</h2>
-      <div class="todo">
-        What question does this work answer, and why did existing methods not
-        answer it? Two or three paragraphs. State the gap concretely enough
-        that a reader can judge whether the result matters.
-      </div>
+      <p>Cellular reprogramming converts one lineage into another through delivered factors &mdash; OSKM for pluripotency, GMT for cardiac conversion. But the delivered factors are not the whole story: the resulting fate is governed by intrinsic regulatory networks, and the endogenous genes that orchestrate the conversion are largely unknown.</p>      <p>Existing methods infer those regulators from network structure, from expression dynamics along a trajectory, or from both &mdash; CEFCON applies network control theory to a learned GRN, SwitchTFI fits a decision-tree switch to each edge, TENET scores transfer entropy along pseudotime, Fatecode perturbs an autoencoder latent code. All four share one blind spot: <strong>none of them learns from the factors already known to drive the system.</strong></p>      <p>They also supervise on regulatory edges or on cell labels rather than on genes, so a gene is rankable only if some prior network or transcription-factor annotation admits it. Each ranking therefore covers only part of the measured transcriptome.</p>
     </section>
 
-    <!-- ---------- Approach ---------- -->
     <section class="section detail__section" id="approach">
       <h2>Approach</h2>
-      <div class="todo">
-        The method, in prose first and detail second. What goes in, what the
-        model does to it, what comes out. Name the key design decision and say
-        what it buys you.
-      </div>
-
-      <figure class="figure">
-        <div class="figure__slot">
-          Architecture / overview figure &mdash; put the image at
-          <code>assets/img/fatedriver-architecture.png</code> and replace this
-          block with an <code>&lt;img&gt;</code>
-        </div>
-        <figcaption>
-          Caption: state what the reader should take away from the figure, not
-          what it depicts.
-        </figcaption>
-      </figure>
+      <p>The premise is simple: the delivered factors are known drivers, so a gene that aligns with the transition the same way they do is a candidate for a shared role. Making that computable requires cells and genes to live in one space.</p>      <ul class="bullets">
+        <li><strong>Cell encoder (view 1).</strong> Cells are joined to nearest neighbours in expression space, but an edge is kept only if it advances in pseudotime, running from the earlier cell to the later one. A graph convolutional network embeds cells over that directed graph, so the geometry carries transcriptional similarity <em>and</em> the direction of the transition.</li>
+        <li><strong>Gene encoder (view 2).</strong> Each gene is placed in the same space by combining a learnable per-gene embedding with the embeddings of the cells expressing it, weighted by expression, then refined over a prior gene network (the NicheNet regulatory and signaling union) so positions reflect known regulation rather than expression alone.</li>
+        <li><strong>Gene scorer.</strong> A set encoder summarises the source and target populations into order-invariant vectors. Each gene is compared against source, target and their difference in two complementary ways &mdash; a <em>similarity</em> term collapsing the three into one direction, and a <em>cross-attention</em> term that keeps them apart and asks which the gene belongs to. A <em>transition prior</em> adds evidence read straight from the data.</li>
+      </ul>      <p><strong>The labels are the hard part.</strong> Only three or four genes per system are known drivers. The unlabeled remainder is not a set of confirmed non-drivers &mdash; those genes have simply never been tested. Treating them as negatives would penalise exactly the genes of interest, so the objective is a positive&ndash;unlabeled ranking problem over three tiers: delivered factors, their direct downstream targets, then the remainder. Placing targets below the factors rather than alongside them separates genes that <em>drive</em> a transition from genes that merely <em>respond</em> to it. A gene that repeatedly scores at the top is moved into a pseudo-positive bank rather than being punished for it.</p>      <p>Three losses combine, weighted to take effect in turn: a reconstruction loss anchors the shared space to the measured counts, a ranking loss supplies the tiered supervision, and a shift-consistency loss keeps the top of the ranking aligned with the direction of the transition.</p>
     </section>
 
-    <!-- ---------- Results ---------- -->
     <section class="section detail__section" id="results">
       <h2>Results</h2>
-      <div class="todo">
-        Lead with the headline number and the comparison that makes it
-        meaningful, then the table. Mark the best value in each column with
-        <code>class="is-best"</code>.
-      </div>
-
-      <div class="table-wrap">
+      <p>Benchmarked on three scRNA-seq datasets spanning both conversion systems &mdash; two OSKM-driven human iPSC datasets (GSE297234, GSE242423) and one GMT-driven mouse cardiac dataset (GSE98567) &mdash; against the four existing methods plus an expression-only MLP sharing FateDriver’s labels, splits and objective.</p>      <p><strong>Where do the delivered factors land?</strong> Mean rank out of 3,000 genes, lower is better.</p>      <div class="table-wrap">
         <table class="table">
-          <caption class="visually-hidden">FateDriver benchmark results</caption>
+          <caption class="table__note">The MLP shares FateDriver’s labels and evaluation, so the gap comes from the components it lacks, not from the supervision.</caption>
           <thead>
             <tr>
               <th scope="col">Method</th>
-              <th scope="col">Metric &mdash; TODO</th>
-              <th scope="col">Metric &mdash; TODO</th>
+              <th scope="col">GSE297234</th>
+              <th scope="col">GSE242423</th>
+              <th scope="col">GSE98567</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th scope="row">FateDriver</th>
-              <td>&mdash;</td>
+              <td><span class="is-best">2.5</span></td>
+              <td><span class="is-best">5.0</span></td>
+              <td><span class="is-best">2.0</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Expression-only MLP</th>
+              <td>6.3</td>
+              <td>632.8</td>
+              <td>33.3</td>
+            </tr>
+            <tr>
+              <th scope="row">CEFCON</th>
+              <td>2.8</td>
+              <td>806.0</td>
               <td>&mdash;</td>
             </tr>
             <tr>
-              <th scope="row">Baseline &mdash; TODO</th>
-              <td>&mdash;</td>
-              <td>&mdash;</td>
+              <th scope="row">SwitchTFI</th>
+              <td>12.3&ndash;26.7</td>
+              <td>12.3&ndash;26.7</td>
+              <td>12.3&ndash;26.7</td>
+            </tr>
+            <tr>
+              <th scope="row">TENET / Fatecode</th>
+              <td>hundreds&ndash;thousands</td>
+              <td>hundreds&ndash;thousands</td>
+              <td>hundreds&ndash;thousands</td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </div>      <p><strong>Does it recover independently curated regulators?</strong> Scored as AUROC against externally curated reprogramming enhancers and barriers, where 0.5 is chance. FateDriver was highest on two datasets (0.93 and 0.74) and second on the third (0.87). TENET reached 0.90 on one, but ranked only 387 genes and covered three curated positives against ten for FateDriver; its cardiac AUROC was 0.41.</p>      <p><strong>Is it just finding co-expressed genes?</strong> This is the result that separates the two. The MLP produced the top-100 genes most correlated with the delivered factors in every dataset (r = 0.87, 0.96, 0.60) yet recovered <em>less</em> of the curated set than FateDriver, whose own co-expression was low (0.17, 0.15, 0.47). Sharing an expression pattern with the delivered factors and recovering curated regulators do not track each other &mdash; and FateDriver is doing the second, not the first.</p>      <p><strong>A score belongs to a transition, not to a gene.</strong> Two transcriptionally distinct fibroblast states from one heterogeneous culture were scored against a common iPSC target. The rankings differed over four-fifths of their content: 82 genes specific to each state, only 18 shared. Those 18 were the four delivered factors plus the senescence barrier <em>Cdkn1a</em>, <em>Cdkn2a</em> and <em>Serpine1</em>. The two sets also moved in opposite directions along the trajectory &mdash; 79 of 82 baseline-specific genes switched on, 75 of 79 primed-specific genes switched off &mdash; and each kept its direction when scored along a fate axis neither ranking had used.</p>      <p><strong>Partial versus complete reprogramming.</strong> Scored against two endpoints reached from the same fibroblasts, FateDriver returned different gene sets. Among the genes specific to the partial endpoint, <em>DDX58</em> (RIG-I, which initiates the type I interferon response) best separated single cells that activated the endogenous pluripotency program from those that did not (AUROC 0.711 young donor, 0.851 aged). The relationship is graded rather than all-or-none: across eight strata of interferon-stimulated gene score, the fraction of day-10 cells that reprogrammed fell from 32.8% to 1.2% in the young donor and 26.1% to 0.4% in the aged.</p>      <p><strong>Transfer to a dataset with no defined source.</strong> Applied to a population partially reprogrammed <em>in vivo</em> in mouse intestine, FateDriver ranked crypt base columnar cells highest among candidate origins (source affinity 0.396, 1.7&times; the next candidate). CytoTRACE2, an independent measure, scored CBC highest for developmental plasticity &mdash; support from a method that shares none of FateDriver’s assumptions.</p>
     </section>
 
-    <!-- ---------- Technical details ---------- -->
-    <section class="section detail__section" id="technical">
-      <h2>Technical details</h2>
+    <section class="section detail__section" id="repro">
+      <h2>Data</h2>
       <dl class="specs">
         <div>
-          <dt>Architecture</dt>
-          <dd>dual-view graph neural network</dd>
+          <dt>Human iPSC (OSKM)</dt>
+          <dd>GSE297234 (donors GM23815, GM00731), GSE242423</dd>
         </div>
         <div>
-          <dt>View 1</dt>
-          <dd>cell-state transition graph</dd>
+          <dt>Mouse cardiac (GMT)</dt>
+          <dd>GSE98567</dd>
         </div>
         <div>
-          <dt>View 2</dt>
-          <dd>gene regulatory network</dd>
+          <dt>Two fibroblast states</dt>
+          <dd>GSE181451 &mdash; baseline MEF (n = 5,243), primed MEF (n = 1,505), iPSC (n = 3,876)</dd>
         </div>
         <div>
-          <dt>Task</dt>
-          <dd>driver-gene prediction for TF-induced reprogramming</dd>
+          <dt>Gene space</dt>
+          <dd>3,000 highly variable genes, identical across all methods</dd>
         </div>
         <div>
-          <dt>Data source</dt>
-          <dd>TODO</dd>
+          <dt>Prior network</dt>
+          <dd>NicheNet regulatory and signaling network union</dd>
         </div>
         <div>
-          <dt>Training setup</dt>
-          <dd>TODO</dd>
-        </div>
-        <div>
-          <dt>Hardware</dt>
-          <dd>TODO</dd>
+          <dt>Baselines</dt>
+          <dd>CEFCON, TENET, Fatecode, SwitchTFI, expression-only MLP</dd>
         </div>
       </dl>
     </section>
 
-    <!-- ---------- Reproducibility ---------- -->
-    <section class="section detail__section" id="repro">
-      <h2>Reproducibility</h2>
-      <div class="todo">
-        Where the code and data live, and the shortest path from a clean
-        checkout to the headline number.
-      </div>
-
-      <pre class="code"><code>git clone https://github.com/Jieun-Sung/FateDriver
-cd fatedriver
-# TODO: environment setup + entry point
-</code></pre>
-    </section>
-
-    <!-- ---------- Citation ---------- -->
     <section class="section detail__section" id="cite">
       <h2>Citation</h2>
       <pre class="code"><code>@article{sung2026fatedriver,
   title   = {FateDriver: A Dual-View Graph Neural Network for Predicting
-             Driver Genes in Transcription Factor-Induced Cellular
-             Reprogramming},
-  author  = {Sung, Jieun and Son, K. and Cha, Hyuk-Jin and
-             Kim, Wankyu and Lee, H.},
-  note    = {Manuscript in preparation. Equal contribution: Sung and Son},
+             Driver Genes in Cellular Reprogramming},
+  author  = {Sung, Jieun and Son, Kyuwon and Cha, Hyuk-Jin and
+             Kim, Wankyu and Lee, Haeseung},
+  note    = {Manuscript in preparation. Sung and Son contributed equally},
   year    = {2026}
 }</code></pre>
     </section>

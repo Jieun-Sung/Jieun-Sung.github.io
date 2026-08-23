@@ -123,16 +123,29 @@ mirror that order, with a leading "← All work" back to `index.html#research`.
 
 | Block | Class | Holds |
 |---|---|---|
-| Head | `.detail__head` | Status badge, year, title, lede, metrics, links |
+| Head | `.detail__head` | Status badge, year, title, lede, authors, metrics, links |
+| Hero figure | `.figure--hero` | The same figure as the home-page card |
 | Spec list | `.specs` | Architecture, data, compute — term/value pairs |
 | Results table | `.table` in `.table-wrap` | Best value per column gets `.is-best` |
-| Figure | `.figure` / `.figure__slot` | `__slot` is the dashed placeholder |
+| Body bullets | `.bullets` | Prose that happens to be enumerated |
+| Caveat | `.callout` | A limitation or negative result, stated not buried |
 | Code | `.code` | Shell commands and BibTeX |
 | Draft marker | `.todo` | Scaffolding waiting on real content |
+
+Section order varies by page — the four research pages run Problem → Approach →
+Results → Citation with extra sections where the work earns them (scDEBART adds
+Corpus and Takeaway, TDEP adds Limits and Reproducibility). Nav tabs are built
+from whatever sections the page defines, so adding one is a single entry.
 
 `.todo` blocks are prompts to the author, not site content. Delete the element
 once the section is written — nothing else depends on it. A page with no
 `.todo` left is finished.
+
+A note on tone: these pages report negative and limiting results in the same
+voice as the positive ones — `.callout` exists for exactly that. TDEM says
+gradient training contributes nothing and that the knockdown comparison failed;
+TDEP says its unseen-drug split is an upper bound. That is what the manuscripts
+say, and softening it here would misrepresent them.
 
 `.code` is the one place that intentionally uses a monospace stack rather than
 `--f-sans`: code has to align by character. That is functional, not decorative,

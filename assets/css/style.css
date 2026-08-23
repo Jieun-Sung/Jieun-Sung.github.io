@@ -363,8 +363,55 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 .entry__title a:hover { color: var(--c-green); text-decoration: none; }
 .entry__title a:hover::after { color: var(--c-green); }
 
+/* --- Entry thumbnail ------------------------------------------------------
+   The figure is the main way into the detail page. Figures vary widely in
+   aspect ratio (3.5:1 to 1.7:1), so the box is fixed and the image is
+   `contain`ed inside it — cropping a scientific figure would cut content. */
+
+.entry__thumb {
+  display: block;
+  position: relative;
+  margin-top: var(--sp-4);
+  border: var(--bw) solid var(--c-rule);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.entry__thumb img {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: contain;
+  padding: var(--sp-3);
+}
+.entry__thumb::after {
+  content: "Read the details \2197";
+  position: absolute;
+  right: var(--sp-3);
+  bottom: var(--sp-3);
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--c-green);
+  color: var(--c-surface);
+  font-size: var(--t--1);
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(var(--sp-2));
+  transition: opacity var(--dur-med) var(--ease),
+              transform var(--dur-med) var(--ease);
+}
+.entry__thumb:hover,
+.entry__thumb:focus-visible { border-color: var(--c-green); }
+.entry__thumb:hover::after,
+.entry__thumb:focus-visible::after { opacity: 1; transform: none; }
+
+/* Touch devices have no hover, so the affordance is always shown. */
+@media (hover: none) {
+  .entry__thumb::after { opacity: 1; transform: none; }
+}
+
 .entry__lede {
-  margin-top: var(--sp-3);
+  margin-top: var(--sp-4);
   max-width: var(--w-measure);
 }
 .entry__note {
@@ -387,7 +434,8 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
   white-space: nowrap;
 }
 .status--published { background: var(--c-green); color: var(--c-surface); }
-.status--review    { background: var(--c-green-wash); color: var(--c-green-deep); }
+.status--review,
+.status--award     { background: var(--c-green-wash); color: var(--c-green-deep); }
 .status--prep      { border: var(--bw) solid var(--c-rule); color: var(--c-muted); }
 .status--progress  { border: var(--bw) dashed var(--c-rule); color: var(--c-muted); }
 
@@ -533,6 +581,57 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
   font-size: var(--t-1);
 }
 
+.detail__authors {
+  margin-top: var(--sp-4);
+  font-size: var(--t--1);
+  color: var(--c-muted);
+  max-width: var(--w-measure);
+}
+
+/* The figure from the home-page card, shown full width at the top of the
+   detail page so the reader lands on what they clicked. */
+.figure--hero {
+  margin-top: var(--sp-6);
+  padding: var(--sp-4);
+  border: var(--bw) solid var(--c-rule);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+}
+.figure--hero img { width: 100%; height: auto; }
+
+/* Body bullets. `.metrics` and `.linkrow` are chips and links; this is prose
+   that happens to be enumerated, so it keeps the body measure and rhythm. */
+.bullets { max-width: var(--w-measure); }
+.bullets li {
+  position: relative;
+  padding-left: var(--sp-5);
+  margin-top: var(--sp-3);
+}
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: var(--sp-3);
+  height: 2px;
+  background: var(--c-green);
+}
+
+/* An aside that qualifies the claim just made — a limitation, a caveat, or a
+   negative result being reported rather than buried. */
+.callout {
+  margin-top: var(--sp-4);
+  padding: var(--sp-4);
+  border-left: 2px solid var(--c-green);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: var(--c-green-wash);
+  color: var(--c-green-deep);
+  max-width: var(--w-measure);
+  font-size: var(--t--1);
+}
+
+.muted { color: var(--c-muted); font-weight: 400; }
+
 /* Section headings inside a detail page are h2 — quieter than the page title
    but louder than a `.subhead`. */
 .detail__section { padding-top: var(--sp-7); }
@@ -589,6 +688,19 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 }
 .table tbody tr:last-child td { border-bottom: none; }
 .table .is-best { color: var(--c-green-deep); font-weight: 600; }
+.table tbody th { font-weight: 500; white-space: nowrap; }
+
+/* Caption sits below the table but is the first child in source, as HTML
+   requires — caption-side moves it visually. */
+.table__note {
+  caption-side: bottom;
+  padding-top: var(--sp-3);
+  text-align: left;
+  color: var(--c-muted);
+  font-size: var(--t--1);
+  white-space: normal;
+  max-width: var(--w-measure);
+}
 
 /* --- Figure placeholder -------------------------------------------------- */
 

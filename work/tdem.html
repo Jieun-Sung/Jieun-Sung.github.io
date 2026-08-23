@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TDEM — Jieun Sung</title>
-<meta name="description" content="TDEM: deconvolving drug-induced transcriptomes into target-specific perturbation profiles by matrix factorization.">
+<meta name="description" content="TDEM tests whether drug-induced transcriptomes decompose additively into target-level effects, and finds it depends on how expression was measured.">
 <meta name="author" content="Jieun Sung">
 <link rel="canonical" href="https://jieun-sung.github.io/work/tdem.html">
 
@@ -21,7 +21,6 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ================= TOP TAB BAR ================= -->
 <div class="topbar">
   <div class="topbar__inner">
     <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
@@ -30,8 +29,7 @@
       <a class="nav__item" href="#problem">Problem</a>
       <a class="nav__item" href="#approach">Approach</a>
       <a class="nav__item" href="#results">Results</a>
-      <a class="nav__item" href="#technical">Technical</a>
-      <a class="nav__item" href="#repro">Reproducibility</a>
+      <a class="nav__item" href="#cite">Citation</a>
     </nav>
   </div>
 </div>
@@ -39,138 +37,162 @@
 <div class="shell shell--single">
   <main class="main detail" id="main">
 
-    <!-- ---------- Head ---------- -->
     <header class="detail__head">
       <div class="entry__meta">
         <span class="status status--prep">In preparation</span>
         <span class="entry__year">2026</span>
       </div>
       <h1 class="detail__title">TDEM</h1>
-      <p class="detail__lede">Deconvolves drug-induced transcriptomes into target-specific perturbation profiles by matrix factorization &mdash; the line of work this lab research started from, and the basis for TDEP.</p>
+      <p class="detail__lede">A drug engages several proteins at once, so the profile it produces is a superposition. Almost every downstream use of drug-perturbation atlases assumes that superposition is additive and can be decomposed back into target-level effects. This work tests the assumption directly rather than relying on it.</p>
+      <p class="detail__authors">Jieun Sung, Wankyu Kim &middot; in preparation</p>
+      <ul class="metrics">
+        <li>902 compounds / 836 targets</li>
+        <li>Target recovery AUROC 0.852</li>
+        <li>0.591 on inferred expression</li>
+      </ul>
       <ul class="linkrow">
         <li><a href="../assets/posters/2024-01-kogo-tdem.pdf">Poster</a></li>
       </ul>
     </header>
 
-    <!-- ---------- Problem ---------- -->
+    <figure class="figure figure--hero">
+      <img src="../assets/img/thumbs/tdem.png" alt="TDEM target-by-gene effect matrix and validation" width="1400" height="807">
+      <figcaption>A target-by-gene effect matrix fitted so that summing a compound’s annotated target rows reproduces its observed response.</figcaption>
+    </figure>
+
     <section class="section detail__section" id="problem">
       <h2>Problem</h2>
-      <div class="todo">
-        What question does this work answer, and why did existing methods not
-        answer it? Two or three paragraphs. State the gap concretely enough
-        that a reader can judge whether the result matters.
-      </div>
+      <p>Large catalogues of drug-induced transcriptional responses are a standard instrument for asking what a compound does inside a cell. The reasoning is straightforward &mdash; a compound perturbs the cell, the cell rearranges its expression program, and that rearrangement carries information about mechanism.</p>      <p>It is also incomplete. A small molecule is not a selective instrument: it binds an intended target and generally several unintended ones, and the observed profile mixes whatever each of those engagements provoked. The genes that moved are visible; which binding event moved them is not.</p>      <p>Inferring mode of action, flagging off-target liability, matching signatures for repurposing &mdash; all of these require resolving that ambiguity, and almost all of them resolve it by assumption: that the contributions of a drug’s targets combine additively enough that a profile can be treated as their sum. It is a reasonable first approximation and it is seldom examined.</p>      <p>If it holds, the individual contributions become recoverable. A compound acting on targets A and B, another on B and C, and a third on A and C jointly constrain A, B and C in a way no single compound does. That is a deconvolution problem, structurally like separating a bulk profile into cell-type components &mdash; except the mixing weights are known from drug&ndash;target annotation rather than estimated.</p>
     </section>
 
-    <!-- ---------- Approach ---------- -->
     <section class="section detail__section" id="approach">
       <h2>Approach</h2>
-      <div class="todo">
-        The method, in prose first and detail second. What goes in, what the
-        model does to it, what comes out. Name the key design decision and say
-        what it buys you.
-      </div>
-
-      <figure class="figure">
-        <div class="figure__slot">
-          Architecture / overview figure &mdash; put the image at
-          <code>assets/img/tdem-architecture.png</code> and replace this
-          block with an <code>&lt;img&gt;</code>
+      <p>TDEM is a target-by-gene coefficient matrix fitted so that summing the rows for a compound’s annotated targets reproduces its observed response. The estimator is deliberately simple &mdash; a single bias-free linear layer, the additive hypothesis written directly as an architecture. For compound <em>d</em> with target indicator <strong>t</strong><sub>d</sub>, the prediction is <strong>t</strong><sub>d</sub><sup>&#8868;</sup><strong>W</strong>.</p>      <p>The point is not the estimator. It is to use the estimator to test the additive assumption and establish the conditions under which the decomposition is possible at all.</p>      <dl class="specs">
+        <div>
+          <dt>Expression source</dt>
+          <dd>KMAP, in which every gene is measured by sequencing</dd>
         </div>
-        <figcaption>
-          Caption: state what the reader should take away from the figure, not
-          what it depicts.
-        </figcaption>
-      </figure>
+        <div>
+          <dt>Cell line and dose</dt>
+          <dd>MCF7 at 100 nM &mdash; the lowest available, to limit off-target binding</dd>
+        </div>
+        <div>
+          <dt>Curation</dt>
+          <dd>compounds with &gt; 110 annotated targets removed; targets with &lt; 3 compounds removed</dd>
+        </div>
+        <div>
+          <dt>Final matrix</dt>
+          <dd>902 compounds &times; 836 targets &times; 11,468 genes</dd>
+        </div>
+        <div>
+          <dt>Normalisation</dt>
+          <dd>TPM &rarr; z-scores against 17,381 GTEx samples across 31 tissues, before differencing drug against vehicle</dd>
+        </div>
+        <div>
+          <dt>Parameters</dt>
+          <dd>836 &times; 11,468 &asymp; 9.6M, against 902 observations</dd>
+        </div>
+      </dl>      <p class="callout">With 9.6M parameters and 902 observations, any model free to fit nonlinear structure would fit noise instead. The linearity is a constraint chosen on purpose, not a limitation accepted reluctantly.</p>
     </section>
 
-    <!-- ---------- Results ---------- -->
     <section class="section detail__section" id="results">
-      <h2>Results</h2>
-      <div class="todo">
-        Lead with the headline number and the comparison that makes it
-        meaningful, then the table. Mark the best value in each column with
-        <code>class="is-best"</code>.
-      </div>
-
-      <div class="table-wrap">
+      <h2>Four findings, two negative</h2>
+      <p><strong>1. Additivity holds, and does not decay with target count.</strong> On 115 compounds withheld from fitting, summing a compound’s annotated target rows predicted its observed response better than any single row and far better than summing an equally sized random target set.</p>      <div class="table-wrap">
         <table class="table">
-          <caption class="visually-hidden">TDEM benchmark results</caption>
+          <caption class="table__note">Random target sets resampled 100 times per compound. The random control is the informative one: it shows the benefit depends on which rows are summed, not on the act of summation.</caption>
           <thead>
             <tr>
-              <th scope="col">Method</th>
-              <th scope="col">Metric &mdash; TODO</th>
-              <th scope="col">Metric &mdash; TODO</th>
+              <th scope="col">Prediction</th>
+              <th scope="col">Median cosine similarity</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">TDEM</th>
-              <td>&mdash;</td>
-              <td>&mdash;</td>
+              <th scope="row">Sum of annotated targets</th>
+              <td><span class="is-best">0.225</span></td>
             </tr>
             <tr>
-              <th scope="row">Baseline &mdash; TODO</th>
-              <td>&mdash;</td>
-              <td>&mdash;</td>
+              <th scope="row">Best individual target</th>
+              <td>0.289</td>
+            </tr>
+            <tr>
+              <th scope="row">Median individual target</th>
+              <td>0.206</td>
+            </tr>
+            <tr>
+              <th scope="row">Sum of random target set</th>
+              <td>0.143</td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </div>      <p>The advantage was expected to erode as target count grew, since a compound engaging many proteins offers more opportunity for interaction between them. It does not &mdash; the margin over random is flat from one target to over a hundred (Spearman &rho; = 0.011, p = 0.90). A median cosine of 0.225 also bounds the claim honestly: the additive model accounts for a component of the response, not the response.</p>      <p><strong>2. The accuracy comes from the additive constraint, not from fitting.</strong> Against nine standard regressors given identical inputs, TDEM had the highest rank correlation with observed profiles (mean 0.379 against 0.355 for XGBoost and 0.100 for ordinary linear regression). Varying one factor at a time explains why.</p>      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Configuration</th>
+              <th scope="col">Mean</th>
+              <th scope="col">Median</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Initialization only, no training</th>
+              <td><span class="is-best">0.382</span></td>
+              <td><span class="is-best">0.412</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Full model</th>
+              <td>0.378</td>
+              <td>0.407</td>
+            </tr>
+            <tr>
+              <th scope="row">Random initialization, trained</th>
+              <td>0.231</td>
+              <td>0.242</td>
+            </tr>
+            <tr>
+              <th scope="row">Per-gene OLS, no additive constraint</th>
+              <td>0.117</td>
+              <td>0.091</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>      <p>Two conclusions follow, and the second is uncomfortable. The additive constraint contributes on its own: from random starting values the jointly fitted model reaches 0.231 where independent per-gene regression reaches 0.117, roughly a doubling attributable to structure. But gradient training contributes <em>nothing</em> &mdash; the closed-form initialisation alone scores marginally above the fully trained model, and 260 epochs of Adam leave held-out performance unchanged within noise.</p>      <p class="callout">This changes what the method is. Describing TDEM as matrix factorization learned by a neural network is accurate about the implementation and misleading about where the result comes from: what the procedure delivers is a closed-form per-target average requiring no optimization. Stating that plainly simplifies the account rather than undermining it.</p>      <p><strong>3. The fitted rows carry the direction of regulation.</strong> For targets that are transcription factors, the genes they regulate have been catalogued independently of any drug experiment. Across 55 transcription factors, the annotated regulon was enriched at the <em>low</em> end of its own row (median NES &minus;1.09, negative in 41 of 55, p = 1.1&times;10<sup>&minus;5</sup>), with HDAC1 (&minus;1.87), MYC, TP53, ESR1, NFKB1, NR4A1 and STAT3 significant after correction.</p>      <p>The negative sign is the substance. A TDEM row represents the consequence of <em>inhibiting</em> its target; curated regulons are predominantly activating; inhibiting an activator drives its targets down. A sign-agnostic overlap test could not have distinguished this from coincidence.</p>      <p><strong>4. The rows do not reproduce observed knockdown transcriptomes.</strong> The most direct external test available fails. Across ten knockdown experiments in the same cell line the matrix was fitted on, the matched target placed at a median rank of 312 of 836 against 418 expected by chance &mdash; better than chance, but not usable. Median Spearman correlation with the matched row was +0.014, and directional agreement was absent.</p>      <p class="callout">This is reported as a failure of the comparison rather than a confirmation of the method. One interpretation contextualises it without rescuing it: pharmacological inhibition and genetic ablation are different perturbations &mdash; partial reversible occupancy over hours against complete protein loss over days &mdash; and knockdown signatures are known to carry substantial reagent-driven structure. That argument was available before the experiment was run, and was not committed to in advance.</p>      <p><strong>5. Decomposability depends on how expression was measured.</strong> Running the identical pipeline on LINCS L1000, where 978 landmark genes are measured and roughly 12,000 are computationally inferred, produced a matrix that behaved very differently. Reconstruction accuracy survived; target recovery did not.</p>      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Measure</th>
+              <th scope="col">Sequencing (KMAP)</th>
+              <th scope="col">Inferred (L1000)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Target recovery AUROC</th>
+              <td><span class="is-best">0.852</span></td>
+              <td>0.591</td>
+            </tr>
+            <tr>
+              <th scope="row">Target recovery AUPRC</th>
+              <td><span class="is-best">0.524</span></td>
+              <td>0.152</td>
+            </tr>
+            <tr>
+              <th scope="row">Reconstruction (Spearman)</th>
+              <td>0.379</td>
+              <td>0.325</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>      <p>Since model, objective and curation were held fixed, the loss originates in the input. Asking how far a single compound agrees with <em>itself</em> across the two platforms makes the size of the problem concrete: median odds ratio 1.19&ndash;1.26 for overlap between differentially expressed gene sets. Within L1000, a drug and a genetic knockdown &mdash; two <em>different</em> perturbation modalities &mdash; overlap more strongly (odds ratio 2.47) than one compound does with itself across platforms. Platform contributes more to a drug-induced DEG set than compound identity does.</p>      <p>The proposed mechanism: inference from landmark genes reconstructs the component of a response shared with the reference transcriptomes while attenuating whatever departs from those learned correlations &mdash; and a target-specific signature is precisely such a departure. Deconvolution asks for the information that inference smooths away.</p>      <p><strong>Modules and application.</strong> Consensus clustering partitioned all 836 targets into 22 modules, 21 of which were significantly enriched for interactions among their own members. The clearest is module 18, which contains all eleven histone deacetylases HDAC1 through HDAC11 &mdash; an entire enzyme family recovered from transcriptional consequence alone, with no protein annotation supplied. Applied to triple-negative breast cancer, the matrix prioritises 26 candidate targets whose predicted effects oppose the disease signature, four of them without prior association.</p>
     </section>
 
-    <!-- ---------- Technical details ---------- -->
-    <section class="section detail__section" id="technical">
-      <h2>Technical details</h2>
-      <dl class="specs">
-        <div>
-          <dt>Method</dt>
-          <dd>matrix factorization</dd>
-        </div>
-        <div>
-          <dt>Task</dt>
-          <dd>multi-target drug transcriptome &rarr; single-target profiles</dd>
-        </div>
-        <div>
-          <dt>Relation to TDEP</dt>
-          <dd>TDEP is the learned successor to this method</dd>
-        </div>
-        <div>
-          <dt>Data source</dt>
-          <dd>TODO</dd>
-        </div>
-        <div>
-          <dt>Rank and hyperparameters</dt>
-          <dd>TODO</dd>
-        </div>
-        <div>
-          <dt>Hardware</dt>
-          <dd>TODO</dd>
-        </div>
-      </dl>
-    </section>
-
-    <!-- ---------- Reproducibility ---------- -->
-    <section class="section detail__section" id="repro">
-      <h2>Reproducibility</h2>
-      <div class="todo">
-        Where the code and data live, and the shortest path from a clean
-        checkout to the headline number.
-      </div>
-
-      <pre class="code"><code>git clone https://github.com/Jieun-Sung/TDEM
-cd tdem
-# TODO: environment setup + entry point
-</code></pre>
-    </section>
-
-    <!-- ---------- Citation ---------- -->
     <section class="section detail__section" id="cite">
       <h2>Citation</h2>
       <pre class="code"><code>@article{sung2026tdem,
-  title   = {TDEM: Deconvolving Drug-Induced Transcriptomes into
-             Target-Specific Perturbation Profiles via
-             Matrix Factorization},
+  title   = {Drug-induced transcriptomes decompose additively into
+             target-level effects, but only when expression is
+             measured rather than inferred},
   author  = {Sung, Jieun and Kim, Wankyu},
   note    = {Manuscript in preparation},
   year    = {2026}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLAST-weighted IC50 ensemble — Jieun Sung</title>
+<meta name="description" content="An uncertainty-aware, BLAST-weighted ensemble over three molecular representations for MAP3K5 inhibitor IC50 prediction.">
+<meta name="author" content="Jieun Sung">
+<link rel="canonical" href="https://jieun-sung.github.io/work/ic50-ensemble.html">
+
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav__item" href="../index.html#research">&larr;&nbsp;All work</a>
+      <a class="nav__item" href="#problem">Problem</a>
+      <a class="nav__item" href="#approach">Approach</a>
+      <a class="nav__item" href="#results">Results</a>
+    </nav>
+  </div>
+</div>
+
+<div class="shell shell--single">
+  <main class="main detail" id="main">
+
+    <header class="detail__head">
+      <div class="entry__meta">
+        <span class="status status--award">Third place</span>
+        <span class="entry__year">2025</span>
+      </div>
+      <h1 class="detail__title">BLAST-weighted IC50 ensemble</h1>
+      <p class="detail__lede">Predicting MAP3K5 (ASK1) inhibitor potency from molecular structure, where the target-specific labelled data is far too small to train on. The approach borrows labelled compounds from homologous kinases and weights how much to trust them by sequence similarity.</p>
+      <p class="detail__authors">3rd AI Drug Discovery Competition &middot; Korea Pharmaceutical and Bio-Pharma Association &middot; third place of 1,137 participants</p>
+      <ul class="metrics">
+        <li>3rd of 1,137 participants</li>
+        <li>381,152 IC50 measurements</li>
+        <li>Private score 0.648</li>
+      </ul>
+      <ul class="linkrow">
+        <li><a href="../assets/posters/2025-10-dacon-ic50.pdf">Poster</a></li>
+      </ul>
+    </header>
+
+    <figure class="figure figure--hero">
+      <img src="../assets/img/thumbs/ic50-ensemble.png" alt="Uncertainty-aware BLAST-weighted multi-representation ensemble" width="1400" height="680">
+      <figcaption>Three molecular representations each predict pIC50 and its uncertainty; ensemble weights combine that uncertainty with PSI-BLAST sequence similarity to the target.</figcaption>
+    </figure>
+
+    <section class="section detail__section" id="problem">
+      <h2>Problem</h2>
+      <p>The task was to predict IC50 for MAP3K5 (ASK1) inhibitors from molecular structure alone. The difficulty is not the model class but the data: measurements against MAP3K5 itself are far too few to train a competitive regressor on.</p>      <p>Data for <em>other</em> kinases is abundant. The question is whether it can be borrowed without corrupting the prediction &mdash; and how much to trust a measurement made against a different protein.</p>
+    </section>
+
+    <section class="section detail__section" id="approach">
+      <h2>Approach</h2>
+      <p><strong>Borrow by homology, weight by similarity.</strong> IC50 data was collected across many proteins from PubChem, BindingDB, CAS and ChEMBL &mdash; 381,152 measurements between 241,586 compounds and 389 proteins. Kinases have highly conserved active sites, so proteins similar to MAP3K5 were selected by PSI-BLAST. The BLAST score was converted to a z-score and passed through a sigmoid, giving a normalised similarity <em>z<sub>B</sub></em> used both as a model input and as an ensemble weight.</p>      <p><strong>Three representations, because none is obviously right.</strong> Each was pretrained differently and each sees a molecule differently, so each was given its own model predicting both pIC50 and its own uncertainty:</p>      <ul class="bullets">
+        <li><strong>KPGT</strong> &mdash; molecule as a hypergraph, pretrained with a Graph Transformer.</li>
+        <li><strong>ChemBERTa</strong> &mdash; SMILES tokenized into a RoBERTa model, pretrained by masked-input property prediction.</li>
+        <li><strong>SELFIES-TED</strong> &mdash; SELFIES, a string representation designed so every string is a valid molecule, with a BART model pretrained on 80M ZINC compounds.</li>
+      </ul>      <p><strong>Combining them.</strong> Each model’s weight comes from its predicted uncertainty, then that weight is blended toward a uniform 1/3 according to how similar the assay target is to MAP3K5: <em>w<sub>i</sub><sup>B</sup> = z<sub>B</sub> &middot; w<sub>i</sub> + (1 &minus; z<sub>B</sub>) &middot; 1/3</em>. When the data comes from a close homologue the model-specific weighting is trusted; when it comes from a distant protein the ensemble falls back toward equal weighting rather than committing to a confident but poorly grounded prediction.</p>      <p>The loss has two parts: a confidence-weighted MSE, in which the BLAST score scales each example’s contribution, and an uncertainty loss based on negative log-likelihood that calibrates predicted uncertainty against actual error and suppresses overconfidence. The two are combined linearly with &alpha; = 0.1.</p>
+    </section>
+
+    <section class="section detail__section" id="results">
+      <h2>Results</h2>
+      <p>Contribution of each representation was assessed on a fixed test set. Individually the ranking was KPGT &gt; SELFIES-TED &gt; ChemBERTa, but the combination of all three scored highest on the competition validation set (private score 0.648). Weighting the ensemble by BLAST target similarity outperformed a model that instead learned protein sequence embeddings through cross-attention.</p>      <p>Third place out of 1,137 participants. The approach is not specific to MAP3K5 &mdash; it applies to any kinase with sparse labels, and extends beyond IC50 to drug&ndash;target interaction regression more generally.</p>      <p class="callout">This was competition work rather than a paper, so the poster is the primary record. It is included here because the data-scarcity problem it addresses &mdash; borrowing supervision from related targets and calibrating how much to trust it &mdash; recurs throughout the rest of this research.</p>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; <span id="year">2026</span> Jieun Sung</p>
+      <ul>
+        <li><a href="../index.html#research">All work</a></li>
+        <li><a href="mailto:jieunsung928@gmail.com">jieunsung928@gmail.com</a></li>
+        <li><a href="https://github.com/Jieun-Sung">GitHub</a></li>
+      </ul>
+    </footer>
+
+  </main>
+</div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

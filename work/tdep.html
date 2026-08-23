@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TDEP — Jieun Sung</title>
-<meta name="description" content="TDEP: predicting target-specific perturbation response from drug-induced transcriptomes.">
+<meta name="description" content="TDEP predicts the transcriptome-wide response to inhibiting a target, giving drug-target interaction calls a gene-level basis.">
 <meta name="author" content="Jieun Sung">
 <link rel="canonical" href="https://jieun-sung.github.io/work/tdep.html">
 
@@ -21,7 +21,6 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- ================= TOP TAB BAR ================= -->
 <div class="topbar">
   <div class="topbar__inner">
     <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
@@ -30,8 +29,9 @@
       <a class="nav__item" href="#problem">Problem</a>
       <a class="nav__item" href="#approach">Approach</a>
       <a class="nav__item" href="#results">Results</a>
-      <a class="nav__item" href="#technical">Technical</a>
+      <a class="nav__item" href="#limits">Limits</a>
       <a class="nav__item" href="#repro">Reproducibility</a>
+      <a class="nav__item" href="#cite">Citation</a>
     </nav>
   </div>
 </div>
@@ -39,18 +39,18 @@
 <div class="shell shell--single">
   <main class="main detail" id="main">
 
-    <!-- ---------- Head ---------- -->
     <header class="detail__head">
       <div class="entry__meta">
         <span class="status status--review">Under review</span>
         <span class="entry__year">2026</span>
       </div>
       <h1 class="detail__title">TDEP</h1>
-      <p class="detail__lede">Maps drug-induced transcriptomic signatures onto target-specific perturbation responses, so that gene-level target effects can be inferred in silico from large-scale pharmacological data.</p>
+      <p class="detail__lede">Target-perturbed Differential Expression Profile. Most drug&ndash;target interaction models return a binary yes or no. TDEP returns the transcriptome-wide response expected from inhibiting the target, so the interaction call arrives together with a gene-level account of what engaging that target would do.</p>
+      <p class="detail__authors">Jieun Sung, Sookyung Kim, Wankyu Kim &middot; under review</p>
       <ul class="metrics">
-        <li>AUROC 0.846 profile</li>
-        <li>AUROC 0.873 pair</li>
-        <li>1-NN baseline 0.671 / 0.729</li>
+        <li>AUROC 0.873 unseen drug</li>
+        <li>10,086 genes per profile</li>
+        <li>938,089 curated interactions</li>
       </ul>
       <ul class="linkrow">
         <li><a href="../assets/posters/2025-10-ksbi-tdep.pdf">Poster</a></li>
@@ -59,134 +59,165 @@
       </ul>
     </header>
 
-    <!-- ---------- Problem ---------- -->
+    <figure class="figure figure--hero">
+      <img src="../assets/img/thumbs/tdep.png" alt="TDEP architecture: protein language model, two perturbed profile generator modules, and scoring against Connectivity Map profiles" width="1400" height="535">
+      <figcaption>TDEP sits between structure-based and omics-based DTI methods: sequence embeddings for the target, Connectivity Map profiles for the ligand, and a predicted perturbation profile as output.</figcaption>
+    </figure>
+
     <section class="section detail__section" id="problem">
       <h2>Problem</h2>
-      <div class="todo">
-        What question does this work answer, and why did existing methods not
-        answer it? Two or three paragraphs. State the gap concretely enough
-        that a reader can judge whether the result matters.
-      </div>
+      <p>Drug&ndash;target interaction prediction splits into two families, and each gives up something the other has.</p>      <ul class="bullets">
+        <li><strong>Structure-based</strong> methods (MolTrans, GraphDTA, DrugBAN) read ligand and protein structure. They are accurate and work on any molecule, but say nothing about what happens biologically once the target is engaged.</li>
+        <li><strong>Omics-based</strong> methods (ssGCN, FRoGS) compare drug-induced transcriptomes against shRNA knockdown profiles. That is biologically grounded but rests on a shaky representation: shRNAs sharing a miRNA-like seed sequence produce more similar signatures than shRNAs targeting the same gene, so off-target noise can dominate the very profile used to define the target.</li>
+      </ul>      <p>Both return only a binary label. Neither tells you which genes move, which is what a mechanistic hypothesis actually needs.</p>
     </section>
 
-    <!-- ---------- Approach ---------- -->
     <section class="section detail__section" id="approach">
       <h2>Approach</h2>
-      <div class="todo">
-        The method, in prose first and detail second. What goes in, what the
-        model does to it, what comes out. Name the key design decision and say
-        what it buys you.
-      </div>
-
-      <figure class="figure">
-        <div class="figure__slot">
-          Architecture / overview figure &mdash; put the image at
-          <code>assets/img/tdep-architecture.png</code> and replace this
-          block with an <code>&lt;img&gt;</code>
-        </div>
-        <figcaption>
-          Caption: state what the reader should take away from the figure, not
-          what it depicts.
-        </figcaption>
-      </figure>
+      <p>TDEP takes an intermediate position: the target is represented by its amino acid sequence, the ligand by its Connectivity Map profile. The model never uses shRNA profiles as a target representation, which removes the off-target noise at its source.</p>      <p>Two modules run in sequence:</p>      <ul class="bullets">
+        <li><strong>PLM.</strong> A frozen protein language model embeds the target sequence. Three were compared: Gene2Vec (200-d), ProtBERT (1,024) and ESM2 (1,280).</li>
+        <li><strong>PPG<sub>1</sub>.</strong> Fully connected layers map that embedding to a gene-wise score vector over G = 10,086 genes.</li>
+        <li><strong>PPG<sub>2</sub>.</strong> Each score becomes a node feature and is refined by a multi-head graph attention network over the STRING co-expression network, so connected genes exchange information while isolated genes update only through self-connections. A final linear layer emits the predicted profile.</li>
+      </ul>      <p>Training signal comes only from the binary interaction label. For each drug&ndash;target pair the model scores its predicted profile against the observed drug-induced profile using a weighted dot product, which emphasises strongly perturbed genes, plus a Pearson correlation term for directional concordance (&alpha; = 0.8). That score is the logit, optimised with binary cross-entropy. The gene-level output is therefore a target-specific discriminant over drug profiles &mdash; that it also carries biological structure is something the paper tests rather than assumes.</p>
     </section>
 
-    <!-- ---------- Results ---------- -->
     <section class="section detail__section" id="results">
       <h2>Results</h2>
-      <div class="todo">
-        Lead with the headline number and the comparison that makes it
-        meaningful, then the table. Mark the best value in each column with
-        <code>class="is-best"</code>.
-      </div>
-
-      <div class="table-wrap">
+      <p><strong>Benchmark, unseen-drug split.</strong> Mean &plusmn; SD across six cell lines and ten negative-sampling seeds (n = 60), balanced 1:1 sampling following the ssGCN and FRoGS protocol.</p>      <div class="table-wrap">
         <table class="table">
-          <caption class="visually-hidden">TDEP benchmark results</caption>
           <thead>
             <tr>
               <th scope="col">Method</th>
-              <th scope="col">AUROC (profile)</th>
-              <th scope="col">AUROC (pair)</th>
+              <th scope="col">AUROC</th>
+              <th scope="col">AUPRC</th>
+              <th scope="col">F1</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">TDEP</th>
-              <td><span class="is-best">0.846</span></td>
+              <th scope="row">TDEP<sub>ESM2</sub></th>
               <td><span class="is-best">0.873</span></td>
+              <td><span class="is-best">0.872</span></td>
+              <td><span class="is-best">0.810</span></td>
             </tr>
             <tr>
-              <th scope="row">1-NN retrieval</th>
-              <td>0.671</td>
-              <td>0.729</td>
+              <th scope="row">TDEP<sub>ProtBERT</sub></th>
+              <td>0.865</td>
+              <td>0.865</td>
+              <td>0.805</td>
             </tr>
             <tr>
-              <th scope="row">Baseline &mdash; TODO</th>
-              <td>&mdash;</td>
-              <td>&mdash;</td>
+              <th scope="row">DrugBAN <span class="muted">(structure)</span></th>
+              <td>0.848</td>
+              <td>0.856</td>
+              <td>0.786</td>
+            </tr>
+            <tr>
+              <th scope="row">GraphDTA<sub>GATNet</sub> <span class="muted">(structure)</span></th>
+              <td>0.828</td>
+              <td>0.860</td>
+              <td>0.763</td>
+            </tr>
+            <tr>
+              <th scope="row">MolTrans <span class="muted">(structure)</span></th>
+              <td>0.820</td>
+              <td>0.849</td>
+              <td>0.749</td>
+            </tr>
+            <tr>
+              <th scope="row">ssGCN <span class="muted">(omics)</span></th>
+              <td>0.593</td>
+              <td>0.602</td>
+              <td>0.571</td>
+            </tr>
+            <tr>
+              <th scope="row">FRoGS <span class="muted">(omics)</span></th>
+              <td>0.524</td>
+              <td>0.520</td>
+              <td>0.518</td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </div>      <p>TDEP closes the gap to the best structure-based models from the omics side &mdash; the margin over DrugBAN rests on four of six cell lines and is not significant &mdash; while clearly exceeding the omics-based baselines. A memorisation control confirms the accuracy is not lookup: describing each target by the average profile of drugs already known to bind it reaches only 0.623.</p>      <p><strong>Ablation.</strong> The two modules turn out to do different jobs, and which one matters depends on the generalisation regime.</p>      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Configuration</th>
+              <th scope="col">Unseen drug</th>
+              <th scope="col">Unseen target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Full model</th>
+              <td>0.923</td>
+              <td>0.663</td>
+            </tr>
+            <tr>
+              <th scope="row">No PLM</th>
+              <td>0.921 <span class="muted">(p = 0.63)</span></td>
+              <td>0.610 <span class="muted">(p = 0.0039)</span></td>
+            </tr>
+            <tr>
+              <th scope="row">No PPG<sub>2</sub></th>
+              <td>0.697 <span class="muted">(p = 0.0039)</span></td>
+              <td>0.664 <span class="muted">(p = 0.92)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>      <p>When targets are well represented in training, the graph module carries the signal and the sequence encoder is redundant. When the target is unseen, that reverses: sequence-derived priors become the only route to generalisation. Both are kept because deployment spans both regimes.</p>      <p><strong>Transferability.</strong> Same-cell mean AUROC 0.899, cross-cell 0.888, multi-cell ensemble 0.910. The small cross-cell drop indicates much of what TDEP learns is shared across cell lines rather than cell-type-specific. The ensemble gain came from variance reduction, not from the similarity weighting &mdash; a uniform-weight ensemble performed identically, which the paper reports rather than claiming the weighting worked.</p>      <p><strong>Does the gene-level output mean anything?</strong> Because drugs are polypharmacological, an observed profile mixes all engaged targets. But genes consistently perturbed across structurally unrelated drugs sharing one target are more likely to reflect that target. For KCNH2, seven active drugs gave 45 consensus DEGs, and cosine similarity between the TDEP profile and observed responses over those genes was 0.31 against 0.02 for random targets (KS p = 8.2&times;10<sup>&minus;3</sup>). Extended to 234 targets, 9 of 11 drug-count strata were significant, with concordance rising as more drugs contribute.</p>
     </section>
 
-    <!-- ---------- Technical details ---------- -->
-    <section class="section detail__section" id="technical">
-      <h2>Technical details</h2>
-      <dl class="specs">
-        <div>
-          <dt>Task</dt>
-          <dd>drug-induced transcriptome &rarr; target perturbation response</dd>
-        </div>
-        <div>
-          <dt>Evaluation levels</dt>
-          <dd>profile-level and pair-level</dd>
-        </div>
-        <div>
-          <dt>Baselines</dt>
-          <dd>training-free retrieval (1-NN)</dd>
-        </div>
-        <div>
-          <dt>Data source</dt>
-          <dd>TODO &mdash; source and release version</dd>
-        </div>
-        <div>
-          <dt>Architecture</dt>
-          <dd>TODO</dd>
-        </div>
-        <div>
-          <dt>Training setup</dt>
-          <dd>TODO &mdash; optimizer, schedule, epochs</dd>
-        </div>
-        <div>
-          <dt>Hardware</dt>
-          <dd>TODO</dd>
-        </div>
-      </dl>
+    <section class="section detail__section" id="limits">
+      <h2>Limitations</h2>
+      <p>Stated in the paper, and worth repeating here rather than burying:</p>      <ul class="bullets">
+        <li>The unseen-drug split holds out drug identity alone, so test compounds may be close analogues of training ones. The reported numbers are an upper bound on generalisation to novel chemistry; a scaffold- or mechanism-based split would tighten them.</li>
+        <li>TDEP needs a Connectivity Map profile as input, which restricts it to ligands in that resource.</li>
+        <li>All training cell lines are established cancer lines.</li>
+        <li>It uses binary interaction labels and does not model binding affinity.</li>
+        <li>Biological validation leans on LINCS data sharing the Luminex platform used for training; concordance with other platforms was not consistently observed.</li>
+        <li>Disentanglement of individual target contributions is supported by the consensus-DEG analysis but not definitively demonstrated.</li>
+      </ul>
     </section>
 
-    <!-- ---------- Reproducibility ---------- -->
     <section class="section detail__section" id="repro">
       <h2>Reproducibility</h2>
-      <div class="todo">
-        Where the code and data live, and the shortest path from a clean
-        checkout to the headline number.
-      </div>
-
-      <pre class="code"><code>git clone https://github.com/Jieun-Sung/TDEP
-cd tdep
-# TODO: environment setup + entry point
-</code></pre>
+      <dl class="specs">
+        <div>
+          <dt>DTI data</dt>
+          <dd>938,089 interactions &middot; 2,747 ligands &middot; 3,967 targets, integrated from BindingDB, BIOSNAP, DAVIS, KIBA, Hetionet, STITCH, TTD and ChEMBL</dd>
+        </div>
+        <div>
+          <dt>Direction annotation</dt>
+          <dd>TargetRX; 265 up-regulatory interactions excluded</dd>
+        </div>
+        <div>
+          <dt>Expression</dt>
+          <dd>LINCS Connectivity Map Level 5, 10,086 landmark and best-inferred genes</dd>
+        </div>
+        <div>
+          <dt>Cell lines</dt>
+          <dd>MCF7, PC3, A549, A375, HT29, HA1E</dd>
+        </div>
+        <div>
+          <dt>Graph</dt>
+          <dd>STRING co-expression network</dd>
+        </div>
+        <div>
+          <dt>External validation</dt>
+          <dd>newly released BindingDB entries, 15,434 interactions across 31 targets</dd>
+        </div>
+      </dl>      <pre class="code"><code>git clone https://github.com/Jieun-Sung/TDEP
+cd TDEP
+# archived release and data: https://doi.org/10.5281/zenodo.21617259</code></pre>
     </section>
 
-    <!-- ---------- Citation ---------- -->
     <section class="section detail__section" id="cite">
       <h2>Citation</h2>
       <pre class="code"><code>@article{sung2026tdep,
   title   = {TDEP: Predicting Target Perturbation Response from
              Drug-Induced Transcriptomes},
-  author  = {Sung, Jieun and Kim, S. and Kim, Wankyu},
+  author  = {Sung, Jieun and Kim, Sookyung and Kim, Wankyu},
   note    = {Manuscript under review},
   year    = {2026}
 }</code></pre>
