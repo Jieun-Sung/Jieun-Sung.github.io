@@ -8,7 +8,6 @@ work/                one page per research entry, opened in a new tab
   scdebart.html      from Selected work on the home page
   tdep.html
   fatedriver.html
-  tdem.html
   ic50-ensemble.html
 assets/
   css/tokens.css     design tokens — the only place raw values live
