@@ -44,13 +44,13 @@
         <span class="status status--review">Under review</span>
         <span class="entry__year">2026</span>
       </div>
-      <h1 class="detail__title">TDEP</h1>
-      <p class="detail__lede">Target-perturbed Differential Expression Profile. Most drug&ndash;target interaction models return a binary yes or no. TDEP returns the transcriptome-wide response expected from inhibiting the target, so the interaction call arrives together with a gene-level account of what engaging that target would do.</p>
+      <h1 class="detail__title">TDEP: Predicting Target Perturbation Response from Drug-Induced Transcriptomes</h1>
+      <p class="detail__lede">Target-perturbed Differential Expression Profile. A deep neural network that predicts transcriptome-wide responses to target inhibition by combining pretrained protein language model embeddings with graph attention propagation over a co-expression network, trained on LINCS Connectivity Map drug-induced transcriptomes under drug&ndash;target interaction supervision.</p>
       <p class="detail__authors">Jieun Sung, Sookyung Kim, Wankyu Kim &middot; under review</p>
       <ul class="metrics">
+        <li>L1000 Connectivity Map</li>
         <li>AUROC 0.873 unseen drug</li>
-        <li>10,086 genes per profile</li>
-        <li>938,089 curated interactions</li>
+        <li>Explainable AI</li>
       </ul>
       <ul class="linkrow">
         <li><a href="../assets/posters/2025-10-ksbi-tdep.pdf">Poster</a></li>
@@ -60,7 +60,7 @@
     </header>
 
     <figure class="figure figure--hero">
-      <img src="../assets/img/thumbs/tdep.png" alt="TDEP architecture: protein language model, two perturbed profile generator modules, and scoring against Connectivity Map profiles" width="1400" height="535">
+      <img src="../assets/img/thumbs/tdep.png" alt="TDEP architecture: protein language model, two perturbed profile generator modules, and scoring against Connectivity Map profiles" width="1375" height="534">
       <figcaption>TDEP sits between structure-based and omics-based DTI methods: sequence embeddings for the target, Connectivity Map profiles for the ligand, and a predicted perturbation profile as output.</figcaption>
     </figure>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLAST-weighted IC50 ensemble — Jieun Sung</title>
+<title>IC50 ensemble — Jieun Sung</title>
 <meta name="description" content="An uncertainty-aware, BLAST-weighted ensemble over three molecular representations for MAP3K5 inhibitor IC50 prediction.">
 <meta name="author" content="Jieun Sung">
 <link rel="canonical" href="https://jieun-sung.github.io/work/ic50-ensemble.html">
@@ -41,13 +41,12 @@
         <span class="status status--award">Third place</span>
         <span class="entry__year">2025</span>
       </div>
-      <h1 class="detail__title">BLAST-weighted IC50 ensemble</h1>
+      <h1 class="detail__title">Sequence-Similarity&ndash;Guided Multi-Representation Ensemble for MAP3K5 IC50 Prediction</h1>
       <p class="detail__lede">Predicting MAP3K5 (ASK1) inhibitor potency from molecular structure, where the target-specific labelled data is far too small to train on. The approach borrows labelled compounds from homologous kinases and weights how much to trust them by sequence similarity.</p>
       <p class="detail__authors">3rd AI Drug Discovery Competition &middot; Korea Pharmaceutical and Bio-Pharma Association &middot; third place of 1,137 participants</p>
       <ul class="metrics">
         <li>3rd of 1,137 participants</li>
-        <li>381,152 IC50 measurements</li>
-        <li>Private score 0.648</li>
+        <li>Uncertainty-based ensemble learning</li>
       </ul>
       <ul class="linkrow">
         <li><a href="../assets/posters/2025-10-dacon-ic50.pdf">Poster</a></li>
@@ -55,7 +54,7 @@
     </header>
 
     <figure class="figure figure--hero">
-      <img src="../assets/img/thumbs/ic50-ensemble.png" alt="Uncertainty-aware BLAST-weighted multi-representation ensemble" width="1400" height="680">
+      <img src="../assets/img/thumbs/ic50-ensemble.png" alt="Uncertainty-aware BLAST-weighted multi-representation ensemble" width="1345" height="663">
       <figcaption>Three molecular representations each predict pIC50 and its uncertainty; ensemble weights combine that uncertainty with PSI-BLAST sequence similarity to the target.</figcaption>
     </figure>
 

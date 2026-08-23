@@ -47,12 +47,8 @@
 
   <!-- ================= RAIL ================= -->
   <header class="rail">
-    <!-- Replace with:
-         <img class="portrait" src="assets/img/portrait.jpg"
-              alt="Jieun Sung" width="380" height="475"> -->
-    <div class="portrait">
-      <span class="portrait__placeholder">photo</span>
-    </div>
+    <img class="portrait" src="assets/img/portrait.jpg"
+         alt="Jieun Sung" width="760" height="950">
 
     <div>
       <h1 class="rail__name">Jieun Sung</h1>
@@ -112,11 +108,11 @@
           <span class="entry__year">2026</span>
         </div>
         <div class="entry__body">
-          <h3 class="entry__title"><a href="work/scdebart.html" target="_blank" rel="noopener">scDEBART</a></h3>
+          <h3 class="entry__title"><a href="work/scdebart.html" target="_blank" rel="noopener">scDEBART: Predicting in silico Single-Cell Perturbation Responses via Large-Scale Differential Expression Learning</a></h3>
           <a class="entry__thumb" href="work/scdebart.html" target="_blank" rel="noopener"
              aria-label="scDEBART — open the full write-up">
             <img src="assets/img/thumbs/scdebart.png" alt="scDEBART architecture and benchmark results"
-                 width="1400" height="593" loading="lazy">
+                 width="1386" height="533" loading="lazy">
           </a>
           <p class="entry__lede">
             A foundation model for single-cell perturbation response, pretrained
@@ -146,20 +142,22 @@
           <span class="entry__year">2026</span>
         </div>
         <div class="entry__body">
-          <h3 class="entry__title"><a href="work/tdep.html" target="_blank" rel="noopener">TDEP</a></h3>
+          <h3 class="entry__title"><a href="work/tdep.html" target="_blank" rel="noopener">TDEP: Predicting Target Perturbation Response from Drug-Induced Transcriptomes</a></h3>
           <a class="entry__thumb" href="work/tdep.html" target="_blank" rel="noopener"
              aria-label="TDEP — open the full write-up">
             <img src="assets/img/thumbs/tdep.png" alt="TDEP model architecture and evaluation"
-                 width="1400" height="535" loading="lazy">
+                 width="1375" height="534" loading="lazy">
           </a>
           <p class="entry__lede">
-            Predicts the transcriptome-wide response to inhibiting a target, so a
-            drug&ndash;target call arrives with a gene-level account of why.
+            A deep neural network that predicts transcriptome-wide responses to
+            target inhibition, combining pretrained protein language model
+            embeddings with graph attention propagation over a co-expression
+            network under drug&ndash;target interaction supervision.
           </p>
           <ul class="metrics">
+            <li>L1000 Connectivity Map</li>
             <li>AUROC 0.873 unseen drug</li>
-            <li>DrugBAN 0.848 / ssGCN 0.593</li>
-            <li>10,086 genes per profile</li>
+            <li>Explainable AI</li>
           </ul>
           <ul class="linkrow">
             <li><a href="assets/posters/2025-10-ksbi-tdep.pdf">Poster</a></li>
@@ -175,53 +173,27 @@
           <span class="entry__year">2026</span>
         </div>
         <div class="entry__body">
-          <h3 class="entry__title"><a href="work/fatedriver.html" target="_blank" rel="noopener">FateDriver</a></h3>
+          <h3 class="entry__title"><a href="work/fatedriver.html" target="_blank" rel="noopener">FateDriver: A Dual-View Graph Neural Network for Predicting Driver Genes in Cellular Reprogramming</a></h3>
           <a class="entry__thumb" href="work/fatedriver.html" target="_blank" rel="noopener"
              aria-label="FateDriver — open the full write-up">
             <img src="assets/img/thumbs/fatedriver.png" alt="FateDriver dual-view graph encoder"
-                 width="1400" height="402" loading="lazy">
+                 width="1387" height="391" loading="lazy">
           </a>
           <p class="entry__lede">
             Learns from the reprogramming factors a protocol delivers, then
             returns the endogenous genes that align the same way.
           </p>
           <ul class="metrics">
-            <li>Curated-regulator AUROC 0.93</li>
-            <li>3 datasets / 2 conversion systems</li>
-            <li>Ranks all 3,000 genes</li>
+            <li>Dual-view graph encoder</li>
+            <li>Best recovery of enhancer/barrier</li>
+            <li>Transferability</li>
           </ul>
           <ul class="linkrow">
             <li><a href="assets/posters/2026-08-ksscr-fatedriver.pdf">Poster</a></li>
+            <li><a href="https://github.com/Jieun-Sung/FateDriver">Code</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.21771206">Archive (Zenodo)</a></li>
           </ul>
           <p class="entry__note">Co-first author.</p>
-        </div>
-      </article>
-
-      <article class="entry">
-        <div class="entry__meta">
-          <span class="status status--prep">In preparation</span>
-          <span class="entry__year">2026</span>
-        </div>
-        <div class="entry__body">
-          <h3 class="entry__title"><a href="work/tdem.html" target="_blank" rel="noopener">TDEM</a></h3>
-          <a class="entry__thumb" href="work/tdem.html" target="_blank" rel="noopener"
-             aria-label="TDEM — open the full write-up">
-            <img src="assets/img/thumbs/tdem.png" alt="TDEM target-by-gene effect matrix"
-                 width="1400" height="807" loading="lazy">
-          </a>
-          <p class="entry__lede">
-            Tests whether drug-induced transcriptomes really decompose into
-            target-level effects &mdash; an assumption the field relies on and
-            rarely checks.
-          </p>
-          <ul class="metrics">
-            <li>902 compounds / 836 targets</li>
-            <li>Target recovery AUROC 0.852</li>
-            <li>0.591 on inferred expression</li>
-          </ul>
-          <ul class="linkrow">
-            <li><a href="assets/posters/2024-01-kogo-tdem.pdf">Poster</a></li>
-          </ul>
         </div>
       </article>
 
@@ -231,21 +203,20 @@
           <span class="entry__year">2025</span>
         </div>
         <div class="entry__body">
-          <h3 class="entry__title"><a href="work/ic50-ensemble.html" target="_blank" rel="noopener">BLAST-weighted IC50 ensemble</a></h3>
+          <h3 class="entry__title"><a href="work/ic50-ensemble.html" target="_blank" rel="noopener">Sequence-Similarity&ndash;Guided Multi-Representation Ensemble for MAP3K5 IC50 Prediction</a></h3>
           <a class="entry__thumb" href="work/ic50-ensemble.html" target="_blank" rel="noopener"
-             aria-label="BLAST-weighted IC50 ensemble — open the full write-up">
+             aria-label="Sequence-similarity-guided IC50 ensemble — open the full write-up">
             <img src="assets/img/thumbs/ic50-ensemble.png" alt="Uncertainty-aware BLAST-weighted ensemble for IC50 prediction"
-                 width="1400" height="680" loading="lazy">
+                 width="1345" height="663" loading="lazy">
           </a>
           <p class="entry__lede">
-            MAP3K5 inhibitor potency predicted from structure alone, by borrowing
-            labelled data from homologous kinases and weighting it by sequence
-            similarity.
+            MAP3K5 inhibitor potency predicted from structure alone, by
+            borrowing labelled data from homologous kinases and weighting it by
+            sequence similarity.
           </p>
           <ul class="metrics">
             <li>3rd of 1,137 participants</li>
-            <li>381,152 IC50 measurements</li>
-            <li>Private score 0.648</li>
+            <li>Uncertainty-based ensemble learning</li>
           </ul>
           <ul class="linkrow">
             <li><a href="assets/posters/2025-10-dacon-ic50.pdf">Poster</a></li>
