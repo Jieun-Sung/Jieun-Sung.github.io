@@ -1,0 +1,11 @@
+# Editable CV source — only the exported PDF is published.
+assets/cv/*.docx
+
+# Dropbox / OS noise
+*.sync-conflict-*
+* (conflicted copy *).*
+.dropbox
+.dropbox.attr
+Thumbs.db
+desktop.ini
+.DS_Store

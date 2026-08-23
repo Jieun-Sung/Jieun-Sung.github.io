@@ -19,14 +19,16 @@
   --c-rule:         #D6DCD6;  /* hairlines, dividers, borders              */
 
   /* --- Typography --------------------------------------------------------
-     3 roles, deliberately:
-       display  Newsreader      — journal serif, headings only
-       body     IBM Plex Sans   — technical documentation face
-       utility  IBM Plex Mono   — metrics, status, years, labels          */
+     One family throughout: IBM Plex Sans. The three role tokens are kept so
+     component rules stay expressive, but they all resolve to the same face —
+     hierarchy comes from size, weight, and letter-spacing, not from mixing
+     typefaces. Numerals use font-variant-numeric: tabular-nums where they
+     need to align.                                                        */
 
-  --f-display: "Newsreader", Georgia, "Times New Roman", serif;
-  --f-body:    "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --f-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --f-sans:    "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --f-display: var(--f-sans);
+  --f-body:    var(--f-sans);
+  --f-mono:    var(--f-sans);
 
   --t--1:  0.8125rem;
   --t-0:   1rem;
@@ -60,6 +62,7 @@
   --bw:    1px;
 
   /* --- Layout ------------------------------------------------------------ */
+  --h-topbar:  3.5rem;   /* sticky section-tab bar */
   --w-rail:    17.5rem;  /* fixed left rail on desktop */
   --w-measure: 64ch;     /* reading measure for body copy */
   --w-page:    72rem;

@@ -7,7 +7,7 @@ index.html
 assets/
   css/tokens.css     design tokens — the only place raw values live
   css/style.css      components, built from tokens
-  js/main.js         rank strip, scroll-spy, footer year
+  js/main.js         tab scroll-spy, footer year
   img/favicon.svg
   img/portrait.jpg   ← not yet added
   cv/Jieun-Sung-CV.pdf

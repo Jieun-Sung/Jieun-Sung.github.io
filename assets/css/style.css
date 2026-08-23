@@ -81,6 +81,45 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 }
 .skip-link:focus { transform: none; color: var(--c-surface); }
 
+/* --- Top tab bar --------------------------------------------------------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: color-mix(in srgb, var(--c-paper) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(8px);
+  border-bottom: var(--bw) solid var(--c-rule);
+}
+
+.topbar__inner {
+  max-width: var(--w-page);
+  margin: 0 auto;
+  min-height: var(--h-topbar);
+  padding: 0 var(--sp-5);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+@media (min-width: 60rem) {
+  .topbar__inner { padding: 0 var(--sp-6); }
+}
+
+.topbar__brand {
+  flex: none;
+  color: var(--c-ink);
+  font-weight: 600;
+  letter-spacing: var(--ls-tight);
+}
+.topbar__brand:hover { color: var(--c-green); text-decoration: none; }
+
+/* Below the rail breakpoint the identity block is already visible at the top
+   of the page, so the brand would just repeat it. */
+@media (max-width: 47.99rem) {
+  .topbar__brand { display: none; }
+}
+
 /* --- Layout -------------------------------------------------------------- */
 
 .shell {
@@ -106,9 +145,9 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 @media (min-width: 60rem) {
   .rail {
     position: sticky;
-    top: 0;
-    height: 100dvh;
-    padding: var(--sp-8) 0 var(--sp-6);
+    top: var(--h-topbar);
+    height: calc(100dvh - var(--h-topbar));
+    padding: var(--sp-7) 0 var(--sp-6);
     display: flex;
     flex-direction: column;
     gap: var(--sp-5);
@@ -135,7 +174,7 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 .rail__name {
   font-family: var(--f-display);
   font-size: var(--t-3);
-  font-weight: 500;
+  font-weight: 600;
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
   margin-top: var(--sp-4);
@@ -147,22 +186,41 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
   max-width: 22ch;
 }
 
-.nav { margin-top: var(--sp-5); }
+/* --- Section tabs (inside the top bar) ------------------------------------
+   Horizontal, scrollable on narrow screens. The active tab is marked by an
+   underline drawn on the bar's own bottom edge. */
+
+.nav {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-4);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.nav::-webkit-scrollbar { display: none; }
+
 .nav__item {
-  display: block;
-  padding: var(--sp-2) 0 var(--sp-2) var(--sp-4);
-  border-left: 2px solid var(--c-rule);
+  flex: none;
+  display: flex;
+  align-items: center;
+  min-height: var(--h-topbar);
+  padding: 0 var(--sp-1);
+  border-bottom: 2px solid transparent;
+  margin-bottom: calc(-1 * var(--bw));
   color: var(--c-muted);
   font-size: var(--t--1);
-  font-family: var(--f-mono);
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   transition: color var(--dur-fast) var(--ease),
               border-color var(--dur-fast) var(--ease);
 }
 .nav__item:hover { color: var(--c-ink); text-decoration: none; }
 .nav__item[aria-current="true"] {
   color: var(--c-green);
-  border-left-color: var(--c-green);
+  border-bottom-color: var(--c-green);
 }
 
 .rail__links {
@@ -200,12 +258,15 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 
 .main { padding-bottom: var(--sp-9); }
 
+/* Anchor targets must clear the sticky bar. */
+.section, .hero { scroll-margin-top: calc(var(--h-topbar) + var(--sp-4)); }
+
 .section { padding-top: var(--sp-8); }
 .section__head { margin-bottom: var(--sp-6); }
 .section__title {
   font-family: var(--f-display);
   font-size: var(--t-3);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--ls-tight);
   margin-top: var(--sp-3);
 }
@@ -215,8 +276,8 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
   color: var(--c-muted);
 }
 
-/* Subheading inside a section — used for Patents and the invited/contributed
-   split. Deliberately quieter than .eyebrow, which marks whole sections. */
+/* Subheading inside a section — used for the invited/contributed split.
+   Deliberately quieter than .eyebrow, which marks whole sections. */
 .subhead {
   font-family: var(--f-mono);
   font-size: var(--t--1);
@@ -235,31 +296,6 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 .hero__prose {
   margin-top: var(--sp-5);
   font-size: var(--t-1);
-}
-
-/* Signature: differential-expression rank strip.
-   Decorative, synthetic data, aria-hidden. */
-.rankstrip {
-  margin-top: var(--sp-7);
-  width: 100%;
-  height: 5.5rem;
-}
-.rankstrip rect { transform-box: fill-box; transform-origin: center; }
-
-@media (prefers-reduced-motion: no-preference) {
-  .rankstrip rect {
-    transform: scaleY(0);
-    animation: grow var(--dur-med) var(--ease) forwards;
-  }
-}
-@keyframes grow { to { transform: scaleY(1); } }
-
-.rankstrip__axis { stroke: var(--c-rule); stroke-width: 1; }
-.rankstrip__caption {
-  font-family: var(--f-mono);
-  font-size: var(--t--1);
-  color: var(--c-muted);
-  margin-top: var(--sp-3);
 }
 
 /* --- Entry (research item) ------------------------------------------------
@@ -302,7 +338,7 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 .entry__title {
   font-family: var(--f-display);
   font-size: var(--t-2);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: var(--ls-tight);
 }
 .entry__lede {

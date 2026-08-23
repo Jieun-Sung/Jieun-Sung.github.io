@@ -18,7 +18,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -26,6 +26,22 @@
 
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= TOP TAB BAR ================= -->
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="#about">Jieun&nbsp;Sung</a>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav__item" href="#about">About</a>
+      <a class="nav__item" href="#research">Research</a>
+      <a class="nav__item" href="#funding">Funding &amp; Awards</a>
+      <a class="nav__item" href="#publications">Publications</a>
+      <a class="nav__item" href="#patents">Patents</a>
+      <a class="nav__item" href="#presentations">Presentations</a>
+      <a class="nav__item" href="#education">Education</a>
+    </nav>
+  </div>
+</div>
 
 <div class="shell">
 
@@ -45,14 +61,6 @@
         Ewha Womans University
       </p>
     </div>
-
-    <nav class="nav" aria-label="Sections">
-      <a class="nav__item" href="#research">Research</a>
-      <a class="nav__item" href="#recognition">Recognition</a>
-      <a class="nav__item" href="#publications">Publications</a>
-      <a class="nav__item" href="#presentations">Presentations</a>
-      <a class="nav__item" href="#education">Education</a>
-    </nav>
 
     <div class="rail__spacer">
       <ul class="rail__links">
@@ -76,8 +84,7 @@
           I am an integrated M.S.&ndash;Ph.D. candidate in Bioinformatics at Ewha
           Womans University, advised by Prof. Wankyu Kim in the
           <a href="https://cmsfox.ewha.ac.kr/syspharm/index.do">Systems Pharmacology
-          Laboratory</a>. My work is supported by an NRF Ph.D. Student Research
-          Promotion Grant, for which I serve as principal investigator.
+          Laboratory</a>.
         </p>
         <p>
           My research applies deep learning to single-cell perturbation biology:
@@ -89,11 +96,6 @@
           learning and pharmacology.
         </p>
       </div>
-
-      <svg class="rankstrip" id="rankstrip" aria-hidden="true" focusable="false"></svg>
-      <p class="rankstrip__caption">
-        genes ranked by log fold change &middot; illustrative
-      </p>
     </section>
 
     <!-- ---------- Research ---------- -->
@@ -201,11 +203,11 @@
       </article>
     </section>
 
-    <!-- ---------- Recognition ---------- -->
-    <section class="section" id="recognition">
+    <!-- ---------- Funding & Awards ---------- -->
+    <section class="section" id="funding">
       <div class="section__head">
-        <p class="eyebrow">Recognition</p>
-        <h2 class="section__title">Funding &amp; awards</h2>
+        <p class="eyebrow">Funding &amp; Awards</p>
+        <h2 class="section__title">Grants &amp; competitions</h2>
       </div>
 
       <ul>
@@ -310,8 +312,15 @@
           <p class="pub__venue">Manuscript in preparation</p>
         </li>
       </ul>
+    </section>
 
-      <h3 class="subhead">Patents</h3>
+    <!-- ---------- Patents ---------- -->
+    <section class="section" id="patents">
+      <div class="section__head">
+        <p class="eyebrow">Patents</p>
+        <h2 class="section__title">Filed applications</h2>
+      </div>
+
       <ul>
         <li class="pub">
           <p class="pub__authors"><strong>Sung, J.</strong> and Kim, W. (2026)</p>

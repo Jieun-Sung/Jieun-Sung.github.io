@@ -11,7 +11,7 @@ serves that — work first, credentials second, biography last.
 
 Ewha Green is the brand constraint. A dark green over large areas reads as an
 official university page, so it is held under roughly 5% of surface: links,
-section rules, status badges, metric chips, and the signature strip. The page
+section rules, status badges, metric chips, and the active tab. The page
 itself is a cool near-white with a faint green cast, not a warm cream.
 
 ## Tokens
@@ -26,7 +26,7 @@ itself is a cool near-white with a faint green cast, not a warm cream.
 | `--c-ink` | `#12211B` | Primary text | 15.2:1 |
 | `--c-muted` | `#5B6660` | Secondary text, metadata | 5.5:1 — AA |
 | `--c-paper` | `#F6F7F4` | Page background | — |
-| `--c-rule` | `#D6DCD6` | Hairlines, down-regulated bars | — (non-text) |
+| `--c-rule` | `#D6DCD6` | Hairlines, dividers, borders | — (non-text) |
 
 Ratios computed with the WCAG 2.1 relative-luminance formula. `--c-muted`
 clears AA for body text but not AAA — do not use it below `--t--1`.
@@ -37,16 +37,21 @@ size.
 
 ### Type
 
-Three faces, three jobs:
+One face, IBM Plex Sans, everywhere. Hierarchy comes from size, weight, and
+letter-spacing rather than from mixing typefaces:
 
-| Role | Face | Why |
-|---|---|---|
-| Display | Newsreader | Journal serif. Headings only, 400/500 |
-| Body | IBM Plex Sans | Drawn for technical documentation |
-| Utility | IBM Plex Mono | Metrics, status, years, nav, eyebrows |
+| Role | Treatment |
+|---|---|
+| Display | `--t-2`/`--t-3`, weight 600, `--ls-tight` |
+| Body | `--t-0`/`--t-1`, weight 400, `--lh-body` |
+| Utility | `--t--1`, weight 500, uppercase + `--ls-caps` for eyebrows and badges |
 
-Numbers live in the mono face with `font-variant-numeric: tabular-nums`, so
-`0.846` and `1,798` read as data rather than prose.
+`--f-display`, `--f-body`, and `--f-mono` all resolve to `--f-sans`. The three
+tokens survive so component rules still say which role they are playing; swap
+one token if a second face is ever reintroduced.
+
+Numbers carry `font-variant-numeric: tabular-nums`, so `0.846` and `1,798`
+align as data rather than prose.
 
 Scale: `--t--1` 0.8125rem · `--t-0` 1rem · `--t-1` 1.125 · `--t-2` 1.375 ·
 `--t-3` and `--t-4` fluid via `clamp()`.
@@ -75,7 +80,7 @@ maturity of the portfolio without reading a word.
 
 ### Metric chip — `.metrics li`
 
-One number plus its unit. Mono, tabular, green wash. Never more than three per
+One number plus its unit. Tabular figures, green wash. Never more than three per
 entry — beyond that they stop being scannable and become a table.
 Do not put a metric here that is not in the paper.
 
@@ -86,35 +91,31 @@ the body (title, lede, metrics, links). Stacks below that. The same gutter
 width is reused by `.record` and `.deflist` so the three sections align down
 the page.
 
-### Nav item — `.nav__item`
+### Top tab bar — `.topbar` / `.nav__item`
+
+Every section is a tab in a sticky bar at the top of the page, in reading
+order: About, Research, Funding & Awards, Publications, Patents, Presentations,
+Education. The bar is `--h-topbar` tall over a translucent, blurred paper
+background; sections carry a matching `scroll-margin-top` so an anchor never
+lands under it.
 
 | State | Visual |
 |---|---|
-| Default | Muted text, hairline left border |
+| Default | Muted text, transparent bottom border |
 | Hover | Ink text |
-| Current | Green text, green left border, `aria-current="true"` |
+| Current | Green text, green bottom border, `aria-current="true"` |
 
 Set by IntersectionObserver, not by click, so the marker follows the scroll
-position and stays correct after in-page anchors.
-
-### Signature — `.rankstrip`
-
-A differential-expression rank strip: genes sorted by log fold change,
-up-regulated above the axis in green, down-regulated below in the rule grey.
-It is the one deliberately bold element; everything else stays quiet.
-
-The data is synthetic and deterministic — generated from a fixed curve and a
-fixed jitter array in `main.js`, so it renders identically every load and no
-unpublished result is exposed. It is `aria-hidden`, decorative, and degrades to
-nothing without JS. Bars grow from the axis with a 14 ms stagger, suppressed
-under `prefers-reduced-motion`.
+position and stays correct after in-page anchors. The bar scrolls horizontally
+on narrow screens, and the active tab is nudged into view with
+`scrollIntoView({ block: "nearest", inline: "nearest" })` — "nearest" on both
+axes so it never scrolls the page itself.
 
 ## Accessibility floor
 
 - Skip link to `#main`
 - `:focus-visible` — 2px green outline, 3px offset, on every interactive element
 - All text meets WCAG AA; body and headings meet AAA
-- Decorative SVG is `aria-hidden="true" focusable="false"`
 - `prefers-reduced-motion: reduce` cancels animation and smooth scrolling
 - Layout is single-column below 48rem; no horizontal scroll at 320px
 
@@ -125,4 +126,4 @@ under `prefers-reduced-motion`.
 | Add a token, then use it | Write a hex or px in `style.css` |
 | Keep green under ~5% of the surface | Fill a section with green |
 | Give every research entry a link or a number | Add an entry that has neither |
-| Let the rank strip be the only flourish | Add a second animated element |
+| Keep one typeface throughout | Reintroduce a second face for "variety" |
