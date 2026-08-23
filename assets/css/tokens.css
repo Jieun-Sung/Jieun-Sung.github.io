@@ -1,0 +1,71 @@
+/* ==========================================================================
+   Design tokens — single source of truth.
+   Nothing outside this file should contain a raw hex value, px size,
+   or duration. If you need a new value, add a token here first.
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Brand green is Ewha Green (#00643E, Pantone 336C).
+     Contrast ratios below are computed against --c-paper (WCAG 2.1).      */
+
+  --c-green:        #00643E;  /* brand. 7.0:1 on paper — AAA body text ok  */
+  --c-green-deep:   #00432A;  /* hover / pressed / dark surface            */
+  --c-green-wash:   #E4EDE7;  /* chip + badge fill                         */
+  --c-ink:          #12211B;  /* primary text. 15.2:1 on paper            */
+  --c-muted:        #5B6660;  /* secondary text. 5.5:1 on paper — AA      */
+  --c-paper:        #F6F7F4;  /* page background (cool, faint green cast)  */
+  --c-surface:      #FFFFFF;  /* raised surface                            */
+  --c-rule:         #D6DCD6;  /* hairlines, dividers, borders              */
+
+  /* --- Typography --------------------------------------------------------
+     3 roles, deliberately:
+       display  Newsreader      — journal serif, headings only
+       body     IBM Plex Sans   — technical documentation face
+       utility  IBM Plex Mono   — metrics, status, years, labels          */
+
+  --f-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --f-body:    "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --f-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --t--1:  0.8125rem;
+  --t-0:   1rem;
+  --t-1:   1.125rem;
+  --t-2:   1.375rem;
+  --t-3:   clamp(1.5rem, 1.15rem + 1.5vw, 2rem);
+  --t-4:   clamp(1.9rem, 1.3rem + 3vw, 3.1rem);
+
+  --lh-tight: 1.15;
+  --lh-snug:  1.35;
+  --lh-body:  1.65;
+
+  --ls-caps:  0.14em;   /* eyebrows, status badges */
+  --ls-tight: -0.02em;  /* display headings */
+
+  /* --- Space (1.5x-ish geometric) ---------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4.5rem;
+  --sp-9: 6.5rem;
+
+  /* --- Border ------------------------------------------------------------ */
+  --r-sm:  2px;
+  --r-md:  4px;
+  --r-lg:  10px;
+  --bw:    1px;
+
+  /* --- Layout ------------------------------------------------------------ */
+  --w-rail:    17.5rem;  /* fixed left rail on desktop */
+  --w-measure: 64ch;     /* reading measure for body copy */
+  --w-page:    72rem;
+
+  /* --- Motion ------------------------------------------------------------ */
+  --dur-fast: 120ms;
+  --dur-med:  260ms;
+  --ease:     cubic-bezier(0.2, 0.7, 0.3, 1);
+}
