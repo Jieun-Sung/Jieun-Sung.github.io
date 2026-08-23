@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDEP — Jieun Sung</title>
+<meta name="description" content="TDEP: predicting target-specific perturbation response from drug-induced transcriptomes.">
+<meta name="author" content="Jieun Sung">
+<link rel="canonical" href="https://jieun-sung.github.io/work/tdep.html">
+
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= TOP TAB BAR ================= -->
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav__item" href="../index.html#research">&larr;&nbsp;All work</a>
+      <a class="nav__item" href="#problem">Problem</a>
+      <a class="nav__item" href="#approach">Approach</a>
+      <a class="nav__item" href="#results">Results</a>
+      <a class="nav__item" href="#technical">Technical</a>
+      <a class="nav__item" href="#repro">Reproducibility</a>
+    </nav>
+  </div>
+</div>
+
+<div class="shell shell--single">
+  <main class="main detail" id="main">
+
+    <!-- ---------- Head ---------- -->
+    <header class="detail__head">
+      <div class="entry__meta">
+        <span class="status status--review">Under review</span>
+        <span class="entry__year">2026</span>
+      </div>
+      <h1 class="detail__title">TDEP</h1>
+      <p class="detail__lede">Maps drug-induced transcriptomic signatures onto target-specific perturbation responses, so that gene-level target effects can be inferred in silico from large-scale pharmacological data.</p>
+      <ul class="metrics">
+        <li>AUROC 0.846 profile</li>
+        <li>AUROC 0.873 pair</li>
+        <li>1-NN baseline 0.671 / 0.729</li>
+      </ul>
+      <ul class="linkrow">
+        <li><a href="../assets/posters/2025-10-ksbi-tdep.pdf">Poster</a></li>
+        <li><a href="https://github.com/Jieun-Sung/TDEP">Code</a></li>
+        <li><a href="https://doi.org/10.5281/zenodo.21617259">Archive (Zenodo)</a></li>
+      </ul>
+    </header>
+
+    <!-- ---------- Problem ---------- -->
+    <section class="section detail__section" id="problem">
+      <h2>Problem</h2>
+      <div class="todo">
+        What question does this work answer, and why did existing methods not
+        answer it? Two or three paragraphs. State the gap concretely enough
+        that a reader can judge whether the result matters.
+      </div>
+    </section>
+
+    <!-- ---------- Approach ---------- -->
+    <section class="section detail__section" id="approach">
+      <h2>Approach</h2>
+      <div class="todo">
+        The method, in prose first and detail second. What goes in, what the
+        model does to it, what comes out. Name the key design decision and say
+        what it buys you.
+      </div>
+
+      <figure class="figure">
+        <div class="figure__slot">
+          Architecture / overview figure &mdash; put the image at
+          <code>assets/img/tdep-architecture.png</code> and replace this
+          block with an <code>&lt;img&gt;</code>
+        </div>
+        <figcaption>
+          Caption: state what the reader should take away from the figure, not
+          what it depicts.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ---------- Results ---------- -->
+    <section class="section detail__section" id="results">
+      <h2>Results</h2>
+      <div class="todo">
+        Lead with the headline number and the comparison that makes it
+        meaningful, then the table. Mark the best value in each column with
+        <code>class="is-best"</code>.
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <caption class="visually-hidden">TDEP benchmark results</caption>
+          <thead>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col">AUROC (profile)</th>
+              <th scope="col">AUROC (pair)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">TDEP</th>
+              <td><span class="is-best">0.846</span></td>
+              <td><span class="is-best">0.873</span></td>
+            </tr>
+            <tr>
+              <th scope="row">1-NN retrieval</th>
+              <td>0.671</td>
+              <td>0.729</td>
+            </tr>
+            <tr>
+              <th scope="row">Baseline &mdash; TODO</th>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---------- Technical details ---------- -->
+    <section class="section detail__section" id="technical">
+      <h2>Technical details</h2>
+      <dl class="specs">
+        <div>
+          <dt>Task</dt>
+          <dd>drug-induced transcriptome &rarr; target perturbation response</dd>
+        </div>
+        <div>
+          <dt>Evaluation levels</dt>
+          <dd>profile-level and pair-level</dd>
+        </div>
+        <div>
+          <dt>Baselines</dt>
+          <dd>training-free retrieval (1-NN)</dd>
+        </div>
+        <div>
+          <dt>Data source</dt>
+          <dd>TODO &mdash; source and release version</dd>
+        </div>
+        <div>
+          <dt>Architecture</dt>
+          <dd>TODO</dd>
+        </div>
+        <div>
+          <dt>Training setup</dt>
+          <dd>TODO &mdash; optimizer, schedule, epochs</dd>
+        </div>
+        <div>
+          <dt>Hardware</dt>
+          <dd>TODO</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ---------- Reproducibility ---------- -->
+    <section class="section detail__section" id="repro">
+      <h2>Reproducibility</h2>
+      <div class="todo">
+        Where the code and data live, and the shortest path from a clean
+        checkout to the headline number.
+      </div>
+
+      <pre class="code"><code>git clone https://github.com/Jieun-Sung/TDEP
+cd tdep
+# TODO: environment setup + entry point
+</code></pre>
+    </section>
+
+    <!-- ---------- Citation ---------- -->
+    <section class="section detail__section" id="cite">
+      <h2>Citation</h2>
+      <pre class="code"><code>@article{sung2026tdep,
+  title   = {TDEP: Predicting Target Perturbation Response from
+             Drug-Induced Transcriptomes},
+  author  = {Sung, Jieun and Kim, S. and Kim, Wankyu},
+  note    = {Manuscript under review},
+  year    = {2026}
+}</code></pre>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; <span id="year">2026</span> Jieun Sung</p>
+      <ul>
+        <li><a href="../index.html#research">All work</a></li>
+        <li><a href="mailto:jieunsung928@gmail.com">jieunsung928@gmail.com</a></li>
+        <li><a href="https://github.com/Jieun-Sung">GitHub</a></li>
+      </ul>
+    </footer>
+
+  </main>
+</div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

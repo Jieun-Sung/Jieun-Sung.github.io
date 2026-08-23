@@ -4,6 +4,11 @@ Personal research site. Static, no build step, no dependencies.
 
 ```
 index.html
+work/                one page per research entry, opened in a new tab
+  scdebart.html      from Selected work on the home page
+  tdep.html
+  fatedriver.html
+  tdem.html
 assets/
   css/tokens.css     design tokens — the only place raw values live
   css/style.css      components, built from tokens

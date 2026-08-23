@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scDEBART — Jieun Sung</title>
+<meta name="description" content="scDEBART: a BART encoder-decoder foundation model predicting single-cell perturbation responses as log fold-changes.">
+<meta name="author" content="Jieun Sung">
+<link rel="canonical" href="https://jieun-sung.github.io/work/scdebart.html">
+
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= TOP TAB BAR ================= -->
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav__item" href="../index.html#research">&larr;&nbsp;All work</a>
+      <a class="nav__item" href="#problem">Problem</a>
+      <a class="nav__item" href="#approach">Approach</a>
+      <a class="nav__item" href="#results">Results</a>
+      <a class="nav__item" href="#technical">Technical</a>
+      <a class="nav__item" href="#repro">Reproducibility</a>
+    </nav>
+  </div>
+</div>
+
+<div class="shell shell--single">
+  <main class="main detail" id="main">
+
+    <!-- ---------- Head ---------- -->
+    <header class="detail__head">
+      <div class="entry__meta">
+        <span class="status status--published">ICML 2026</span>
+        <span class="entry__year">2026</span>
+      </div>
+      <h1 class="detail__title">scDEBART</h1>
+      <p class="detail__lede">A BART encoder&ndash;decoder foundation model for single-cell perturbation response. It reframes the pretraining objective from reconstructing absolute expression to predicting log fold-changes conditioned on basal expression, which lets it generalize inductively to perturbations it has never seen.</p>
+      <ul class="metrics">
+        <li>6.28M DE profiles / 66.6M cells</li>
+        <li>4&ndash;7&times; top-gene recovery</li>
+        <li>71.4% top-1 reverse perturbation</li>
+      </ul>
+      <ul class="linkrow">
+        <li><a href="https://openreview.net/forum?id=pJyidZg93y">Paper</a></li>
+        <li><a href="../assets/posters/2026-07-icml-scdebart.pdf">Poster</a></li>
+        <li><a href="https://github.com/Jieun-Sung/scDEBART">Code</a></li>
+      </ul>
+      <p class="entry__note">Provisional patent application filed, Republic of Korea &mdash; No. 10-2026-0094556.</p>
+    </header>
+
+    <!-- ---------- Problem ---------- -->
+    <section class="section detail__section" id="problem">
+      <h2>Problem</h2>
+      <div class="todo">
+        What question does this work answer, and why did existing methods not
+        answer it? Two or three paragraphs. State the gap concretely enough
+        that a reader can judge whether the result matters.
+      </div>
+    </section>
+
+    <!-- ---------- Approach ---------- -->
+    <section class="section detail__section" id="approach">
+      <h2>Approach</h2>
+      <div class="todo">
+        The method, in prose first and detail second. What goes in, what the
+        model does to it, what comes out. Name the key design decision and say
+        what it buys you.
+      </div>
+
+      <figure class="figure">
+        <div class="figure__slot">
+          Architecture / overview figure &mdash; put the image at
+          <code>assets/img/scdebart-architecture.png</code> and replace this
+          block with an <code>&lt;img&gt;</code>
+        </div>
+        <figcaption>
+          Caption: state what the reader should take away from the figure, not
+          what it depicts.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ---------- Results ---------- -->
+    <section class="section detail__section" id="results">
+      <h2>Results</h2>
+      <div class="todo">
+        Lead with the headline number and the comparison that makes it
+        meaningful, then the table. Mark the best value in each column with
+        <code>class="is-best"</code>.
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <caption class="visually-hidden">scDEBART benchmark results</caption>
+          <thead>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col">Top-gene recovery</th>
+              <th scope="col">Top-1 reverse perturbation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">scDEBART</th>
+              <td><span class="is-best">TODO</span></td>
+              <td><span class="is-best">71.4%</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Baseline &mdash; TODO</th>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <th scope="row">Baseline &mdash; TODO</th>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---------- Technical details ---------- -->
+    <section class="section detail__section" id="technical">
+      <h2>Technical details</h2>
+      <dl class="specs">
+        <div>
+          <dt>Architecture</dt>
+          <dd>BART encoder&ndash;decoder</dd>
+        </div>
+        <div>
+          <dt>Pretraining objective</dt>
+          <dd>log fold-change conditioned on basal expression</dd>
+        </div>
+        <div>
+          <dt>Pretraining corpus</dt>
+          <dd>617 datasets &middot; 6.28M DE profiles &middot; 66.6M cells</dd>
+        </div>
+        <div>
+          <dt>Evaluation</dt>
+          <dd>CRISPRi and CRISPRa datasets</dd>
+        </div>
+        <div>
+          <dt>Hardware</dt>
+          <dd>4&times;H100, DeepSpeed ZeRO-3</dd>
+        </div>
+        <div>
+          <dt>Compute</dt>
+          <dd>452 GPU-hours</dd>
+        </div>
+        <div>
+          <dt>Parameters</dt>
+          <dd>TODO</dd>
+        </div>
+        <div>
+          <dt>Framework</dt>
+          <dd>TODO &mdash; PyTorch and Transformers versions</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ---------- Reproducibility ---------- -->
+    <section class="section detail__section" id="repro">
+      <h2>Reproducibility</h2>
+      <div class="todo">
+        Where the code and data live, and the shortest path from a clean
+        checkout to the headline number.
+      </div>
+
+      <pre class="code"><code>git clone https://github.com/Jieun-Sung/scDEBART
+cd scdebart
+# TODO: environment setup + entry point
+</code></pre>
+    </section>
+
+    <!-- ---------- Citation ---------- -->
+    <section class="section detail__section" id="cite">
+      <h2>Citation</h2>
+      <pre class="code"><code>@inproceedings{sung2026scdebart,
+  title     = {scDEBART: Predicting in silico Single-Cell Perturbation
+               Responses via Large-Scale Differential Expression Learning},
+  author    = {Sung, Jieun and Kim, Wankyu},
+  booktitle = {Proceedings of the 43rd International Conference on
+               Machine Learning (ICML)},
+  year      = {2026}
+}</code></pre>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; <span id="year">2026</span> Jieun Sung</p>
+      <ul>
+        <li><a href="../index.html#research">All work</a></li>
+        <li><a href="mailto:jieunsung928@gmail.com">jieunsung928@gmail.com</a></li>
+        <li><a href="https://github.com/Jieun-Sung">GitHub</a></li>
+      </ul>
+    </footer>
+
+  </main>
+</div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

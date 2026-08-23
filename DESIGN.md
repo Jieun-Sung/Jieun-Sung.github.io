@@ -111,6 +111,33 @@ on narrow screens, and the active tab is nudged into view with
 `scrollIntoView({ block: "nearest", inline: "nearest" })` — "nearest" on both
 axes so it never scrolls the page itself.
 
+### Work detail page — `work/*.html`
+
+One page per Selected work entry, opened in a new tab from the entry title.
+Same shell and tokens as the home page, but `.shell--single` cancels the two
+column grid — there is no rail, so the content runs full width to 56rem.
+
+Fixed section order, so the four pages stay comparable: **Problem → Approach →
+Results → Technical details → Reproducibility → Citation.** The top bar's tabs
+mirror that order, with a leading "← All work" back to `index.html#research`.
+
+| Block | Class | Holds |
+|---|---|---|
+| Head | `.detail__head` | Status badge, year, title, lede, metrics, links |
+| Spec list | `.specs` | Architecture, data, compute — term/value pairs |
+| Results table | `.table` in `.table-wrap` | Best value per column gets `.is-best` |
+| Figure | `.figure` / `.figure__slot` | `__slot` is the dashed placeholder |
+| Code | `.code` | Shell commands and BibTeX |
+| Draft marker | `.todo` | Scaffolding waiting on real content |
+
+`.todo` blocks are prompts to the author, not site content. Delete the element
+once the section is written — nothing else depends on it. A page with no
+`.todo` left is finished.
+
+`.code` is the one place that intentionally uses a monospace stack rather than
+`--f-sans`: code has to align by character. That is functional, not decorative,
+and is not a break from the single-typeface rule.
+
 ## Accessibility floor
 
 - Skip link to `#main`
