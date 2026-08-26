@@ -180,6 +180,16 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
   max-width: 22ch;
 }
 
+/* Below the rail breakpoint the rail is a banner across the top rather than a
+   column beside the content, so its contents are centred. */
+@media (max-width: 59.99rem) {
+  .rail { text-align: center; padding-bottom: var(--sp-6); }
+  .rail .portrait { margin-left: auto; margin-right: auto; }
+  .rail__role { max-width: none; }
+  .rail__links { justify-content: center; }
+  .rail .button { margin-left: auto; margin-right: auto; }
+}
+
 /* --- Section tabs (inside the top bar) ------------------------------------
    Horizontal, scrollable on narrow screens. The active tab is marked by an
    underline drawn on the bar's own bottom edge. */
@@ -642,17 +652,17 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 .detail__section p { max-width: var(--w-measure); }
 
 /* --- Wide body copy ------------------------------------------------------
-   `.detail--wide` drops the reading measure so body copy runs the full width
-   of the content column — flush with the hero figure above it. Used where the
-   figure is the anchor of the page and ragged-short prose beside it reads as
-   a stray column. */
-.detail--wide .detail__lede,
-.detail--wide .detail__authors,
-.detail--wide .detail__section p,
-.detail--wide .bullets,
-.detail--wide .callout,
-.detail--wide .table__note,
-.detail--wide .figure figcaption { max-width: none; }
+   Work detail pages drop the reading measure so body copy runs the full width
+   of the content column — flush with the hero figure above it. The figure is
+   the anchor of these pages, and a short ragged column beside it reads as a
+   stray element. The home page keeps the narrower measure. */
+.detail .detail__lede,
+.detail .detail__authors,
+.detail .detail__section p,
+.detail .bullets,
+.detail .callout,
+.detail .table__note,
+.detail .figure figcaption { max-width: none; }
 
 /* --- Justified body copy -------------------------------------------------
    Prose blocks are justified site-wide; headings, chips, link rows, and
@@ -669,6 +679,17 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 .table__note {
   text-align: justify;
   text-justify: inter-word;
+}
+
+/* At phone widths the measure is short enough that justification opens
+   rivers between words, so lines are allowed to hyphenate. */
+@media (max-width: 40rem) {
+  .detail__lede,
+  .detail__section p,
+  .bullets li,
+  .callout,
+  .entry__lede,
+  .prose p { hyphens: auto; }
 }
 
 /* --- Spec list — architecture, training setup, compute ------------------- */
