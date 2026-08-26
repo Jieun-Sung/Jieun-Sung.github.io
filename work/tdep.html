@@ -29,8 +29,6 @@
       <a class="nav__item" href="#problem">Problem</a>
       <a class="nav__item" href="#approach">Approach</a>
       <a class="nav__item" href="#results">Results</a>
-      <a class="nav__item" href="#limits">Limits</a>
-      <a class="nav__item" href="#repro">Reproducibility</a>
       <a class="nav__item" href="#cite">Citation</a>
     </nav>
   </div>
@@ -166,50 +164,6 @@
           </tbody>
         </table>
       </div>      <p>When targets are well represented in training, the graph module carries the signal and the sequence encoder is redundant. When the target is unseen, that reverses: sequence-derived priors become the only route to generalisation. Both are kept because deployment spans both regimes.</p>      <p><strong>Transferability.</strong> Same-cell mean AUROC 0.899, cross-cell 0.888, multi-cell ensemble 0.910. The small cross-cell drop indicates much of what TDEP learns is shared across cell lines rather than cell-type-specific. The ensemble gain came from variance reduction, not from the similarity weighting &mdash; a uniform-weight ensemble performed identically, which the paper reports rather than claiming the weighting worked.</p>      <p><strong>Does the gene-level output mean anything?</strong> Because drugs are polypharmacological, an observed profile mixes all engaged targets. But genes consistently perturbed across structurally unrelated drugs sharing one target are more likely to reflect that target. For KCNH2, seven active drugs gave 45 consensus DEGs, and cosine similarity between the TDEP profile and observed responses over those genes was 0.31 against 0.02 for random targets (KS p = 8.2&times;10<sup>&minus;3</sup>). Extended to 234 targets, 9 of 11 drug-count strata were significant, with concordance rising as more drugs contribute.</p>
-    </section>
-
-    <section class="section detail__section" id="limits">
-      <h2>Limitations</h2>
-      <p>Stated in the paper, and worth repeating here rather than burying:</p>      <ul class="bullets">
-        <li>The unseen-drug split holds out drug identity alone, so test compounds may be close analogues of training ones. The reported numbers are an upper bound on generalisation to novel chemistry; a scaffold- or mechanism-based split would tighten them.</li>
-        <li>TDEP needs a Connectivity Map profile as input, which restricts it to ligands in that resource.</li>
-        <li>All training cell lines are established cancer lines.</li>
-        <li>It uses binary interaction labels and does not model binding affinity.</li>
-        <li>Biological validation leans on LINCS data sharing the Luminex platform used for training; concordance with other platforms was not consistently observed.</li>
-        <li>Disentanglement of individual target contributions is supported by the consensus-DEG analysis but not definitively demonstrated.</li>
-      </ul>
-    </section>
-
-    <section class="section detail__section" id="repro">
-      <h2>Reproducibility</h2>
-      <dl class="specs">
-        <div>
-          <dt>DTI data</dt>
-          <dd>938,089 interactions &middot; 2,747 ligands &middot; 3,967 targets, integrated from BindingDB, BIOSNAP, DAVIS, KIBA, Hetionet, STITCH, TTD and ChEMBL</dd>
-        </div>
-        <div>
-          <dt>Direction annotation</dt>
-          <dd>TargetRX; 265 up-regulatory interactions excluded</dd>
-        </div>
-        <div>
-          <dt>Expression</dt>
-          <dd>LINCS Connectivity Map Level 5, 10,086 landmark and best-inferred genes</dd>
-        </div>
-        <div>
-          <dt>Cell lines</dt>
-          <dd>MCF7, PC3, A549, A375, HT29, HA1E</dd>
-        </div>
-        <div>
-          <dt>Graph</dt>
-          <dd>STRING co-expression network</dd>
-        </div>
-        <div>
-          <dt>External validation</dt>
-          <dd>newly released BindingDB entries, 15,434 interactions across 31 targets</dd>
-        </div>
-      </dl>      <pre class="code"><code>git clone https://github.com/Jieun-Sung/TDEP
-cd TDEP
-# archived release and data: https://doi.org/10.5281/zenodo.21617259</code></pre>
     </section>
 
     <section class="section detail__section" id="cite">
