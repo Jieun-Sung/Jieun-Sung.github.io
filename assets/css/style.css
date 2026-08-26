@@ -641,6 +641,36 @@ a:hover { color: var(--c-green-deep); text-decoration: underline; }
 .detail__section > * + * { margin-top: var(--sp-4); }
 .detail__section p { max-width: var(--w-measure); }
 
+/* --- Wide body copy ------------------------------------------------------
+   `.detail--wide` drops the reading measure so body copy runs the full width
+   of the content column — flush with the hero figure above it. Used where the
+   figure is the anchor of the page and ragged-short prose beside it reads as
+   a stray column. */
+.detail--wide .detail__lede,
+.detail--wide .detail__authors,
+.detail--wide .detail__section p,
+.detail--wide .bullets,
+.detail--wide .callout,
+.detail--wide .table__note,
+.detail--wide .figure figcaption { max-width: none; }
+
+/* --- Justified body copy -------------------------------------------------
+   Prose blocks are justified site-wide; headings, chips, link rows, and
+   tabular text stay ragged-right. Only wrapped lines are affected. */
+.detail__lede,
+.detail__section p,
+.bullets li,
+.callout,
+.entry__lede,
+.entry__note,
+.section__note,
+.prose p,
+.figure figcaption,
+.table__note {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 /* --- Spec list — architecture, training setup, compute ------------------- */
 
 .specs { margin-top: var(--sp-4); }

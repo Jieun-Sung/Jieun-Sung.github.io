@@ -37,7 +37,7 @@
 </div>
 
 <div class="shell shell--single">
-  <main class="main detail" id="main">
+  <main class="main detail detail--wide" id="main">
 
     <header class="detail__head">
       <div class="entry__meta">
@@ -45,11 +45,11 @@
         <span class="entry__year">2026</span>
       </div>
       <h1 class="detail__title">scDEBART: Predicting in silico Single-Cell Perturbation Responses via Large-Scale Differential Expression Learning</h1>
-      <p class="detail__lede">A foundation model for single-cell perturbation response. It moves the pretraining target from absolute expression to the log fold-change a perturbation produces, conditioned on basal expression &mdash; so the model learns how genes co-regulate <em>under change</em> rather than how they co-vary at rest.</p>
+      <p class="detail__lede">A foundation model for single-cell perturbation response. Rather than reconstructing static expression, it pretrains at scale on expression <em>changes</em> &mdash; learning how gene sets co-vary across millions of contexts instead of which genes are merely co-expressed &mdash; to give perturbation prediction a better inductive bias.</p>
       <p class="detail__authors">Jieun Sung, Wankyu Kim &middot; ICML 2026, COEX, Seoul</p>
       <ul class="metrics">
         <li>6.28M DE profiles / 66.6M cells</li>
-        <li>71.4% top-1 reverse perturbation</li>
+        <li>4&ndash;7&times; better DEG recovery</li>
         <li>452 GPU-hours on 4&times;H100</li>
       </ul>
       <ul class="linkrow">
@@ -66,11 +66,13 @@
 
     <section class="section detail__section" id="problem">
       <h2>Problem</h2>
-      <p>Single-cell foundation models such as scGPT and GeneFormer have not outperformed simple linear baselines on perturbation prediction (Ahlmann-Eltze et al., 2025). That result is worth taking seriously: if scale alone were the answer, it should already have shown up.</p>
-      <p>Two design choices look responsible, and both concern <em>what</em> the model is asked to predict.</p>      <ul class="bullets">
-        <li><strong>The target is dropout-prone.</strong> Models predict absolute expression, and fold changes are computed afterwards from those predictions. Single-cell counts are dominated by zeros, so a post-hoc ratio between two noisy small numbers is unstable exactly where the biology is most interesting.</li>
-        <li><strong>The pretraining task is static.</strong> Reconstructing expression teaches within-cell co-expression &mdash; which genes are on together in a resting cell. Perturbation asks a different question: which genes <em>move together</em> when something is pushed. Co-expression at rest is a weak prior for co-regulation under change.</li>
-      </ul>      <p>scDEBART changes the objective rather than the scale: pretrain directly on population-level log fold-change conditioned on basal expression, so regulatory co-variation across millions of contexts becomes the inductive bias the model brings to a new perturbation.</p>
+      <p>Single-cell foundation models trained on millions of cells can learn gene expression patterns across diverse contexts. However, for predicting genetic perturbation effects they often underperform simple regression models (Ahlmann-Eltze et al., 2025) &mdash; a result that motivates a closer examination of the design choices that may underlie this gap.</p>
+      <p>The gap stems partly from two design choices in existing approaches.</p>
+      <ul class="bullets">
+        <li><strong>Targets defined on dropout-prone absolute expression.</strong> Models predict absolute expression values and compute differential expression post hoc, by comparing predicted perturbed and unperturbed states. Because scRNA-seq data exhibits severe dropout and zero inflation (Qiu, 2020), fold-changes derived from point predictions can be unstable: technical zeros may dominate the signal and distort inferred perturbation-induced changes.</li>
+        <li><strong>Pretraining objectives that reconstruct static co-expression.</strong> Models are typically pretrained to reconstruct masked gene expression within individual cells, learning static co-expression patterns. While these patterns capture which genes tend to be co-expressed, they may not directly encode how genes co-regulate in response to expression changes &mdash; the regulatory dynamics relevant for perturbation prediction.</li>
+      </ul>
+      <p>These observations lead to the question this work asks: whether reframing the pretraining objective &mdash; from reconstructing absolute expression within cells to predicting expression changes across cell populations &mdash; could provide a more suitable inductive bias for perturbation prediction.</p>
     </section>
 
     <section class="section detail__section" id="corpus">
@@ -80,7 +82,7 @@
         <li>Grouped cells within each dataset by SECUER density-based clustering, giving <strong>98,753 clusters</strong> at a median of 278 cells per cluster.</li>
         <li>Computed cluster-pair differential expression with scVI posterior sampling, retaining genes with DE probability &ge; 0.8, detection rate &ge; 0.3, and |logFC| &ge; 1.5.</li>
         <li>Result: <strong>6.28M DE profiles</strong> over 17,944 genes.</li>
-      </ul>      <p>The detection-rate filter matters more than it looks. Baselines routinely rank low-detection genes as top differentially expressed genes &mdash; a dropout artifact rather than signal. Pruning them is a step prior work skips, and it accounts for part of the gap in the DEG-overlap results below.</p>
+      </ul>
     </section>
 
     <section class="section detail__section" id="approach">
