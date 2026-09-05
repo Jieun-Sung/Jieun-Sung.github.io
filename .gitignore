@@ -7,7 +7,7 @@ assets/cv/*.docx
 # these live in assets/img/thumbs/ and ARE committed.
 assets/thumbnails/
 
-# Camera original for the portrait. The committed crop is assets/img/portrait.jpg.
+# Camera original for the portrait. The committed crop is assets/img/portrait_2.png.
 assets/img/IMG_*.jpg
 
 # Dropbox / OS noise
