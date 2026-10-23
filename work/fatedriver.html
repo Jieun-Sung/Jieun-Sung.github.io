@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FateDriver — Jieun Sung</title>
-<meta name="description" content="FateDriver: a dual-view graph neural network that learns from delivered reprogramming factors to rank endogenous driver genes.">
+<meta name="description" content="FateDriver: a graph neural network that learns from the known master-switch genes of cellular reprogramming and ranks the cell's own candidate regulators.">
 <meta name="author" content="Jieun Sung">
 <link rel="canonical" href="https://jieun-sung.github.io/work/fatedriver.html">
 
@@ -42,13 +42,13 @@
         <span class="status status--prep">In preparation</span>
         <span class="entry__year">2026</span>
       </div>
-      <h1 class="detail__title">FateDriver: A Dual-View Graph Neural Network for Predicting Driver Genes in Cellular Reprogramming</h1>
-      <p class="detail__lede">Reprogramming protocols deliver a handful of transcription factors, but the endogenous regulators working alongside them are only partly known. FateDriver uses the delivered factors as positive labels and predicts, among the unlabeled genes, the endogenous ones that act in a similar way.</p>
+      <h1 class="detail__title">FateDriver: Weakly supervised dual-view graph learning for transition-specific prioritization of candidate regulators in cellular reprogramming</h1>
+      <p class="detail__lede">To turn one kind of cell into another, scientists add a few &ldquo;master switch&rdquo; genes. But the cell&rsquo;s own genes do much of the work too, and most of them are still unknown. FateDriver learns from the switches we already know and points to the other genes likely to matter.</p>
       <p class="detail__authors">Jieun Sung*, Kyuwon Son*, Hyuk-Jin Cha, Wankyu Kim, Haeseung Lee &middot; *equal contribution &middot; in preparation</p>
       <ul class="metrics">
-        <li>Dual-view graph encoder</li>
-        <li>Best recovery of enhancer/barrier</li>
-        <li>Transferability</li>
+        <li>Learns from known master switches</li>
+        <li>Results depend on the journey</li>
+        <li>Skin, heart, and intestine</li>
       </ul>
       <ul class="linkrow">
         <li><a href="../assets/posters/2026-08-ksscr-fatedriver.pdf">Poster</a></li>
@@ -59,86 +59,43 @@
 
     <figure class="figure figure--hero">
       <img src="../assets/img/thumbs/fatedriver.png" alt="FateDriver dual-view graph encoder over cells and genes" width="1387" height="391">
-      <figcaption>A dual-view graph encoder places cells and genes in one shared space, so a gene can be scored against the direction of a transition between cell states.</figcaption>
+      <figcaption>Cells and genes share one map, so each gene can be scored against the direction of the change.</figcaption>
     </figure>
 
     <section class="section detail__section" id="problem">
       <h2>Problem</h2>
-      <p>Cellular reprogramming converts one lineage into another through delivered factors &mdash; OSKM for pluripotency, GMT for cardiac conversion. But the delivered factors are not the whole story: the resulting fate is governed by intrinsic regulatory networks, and the endogenous genes that orchestrate the conversion are largely unknown.</p>
-      <p><strong>Existing methods lean on a pre-built gene regulatory network.</strong> CEFCON applies network control theory to an inferred GRN, SwitchTFI fits a decision-tree switch to each GRN edge, TENET scores transfer entropy along pseudotime, Fatecode perturbs an autoencoder latent code. Where a prior network carries the ranking, the ranking inherits the network&rsquo;s bias: well-studied genes have many curated edges, so high degree in the reference &mdash; an artefact of how much attention a gene has received &mdash; pushes them to the top regardless of what the dataset shows. A method that scores by connectivity in the literature is not scoring the transition in front of it. The same prior also bounds what is rankable at all, so a gene absent from the network cannot be returned even when the data speak clearly about it.</p>
-      <p><strong>FateDriver builds its space from the data instead.</strong> Cells and genes are embedded from the measured expression and the pseudotime direction of the transition itself, and supervision comes from the delivered factors used as positive labels &mdash; so a gene is ranked by how it behaves in this conversion, not by how connected it is in a reference network. The prior network is kept only as a light refinement of gene positions, never as the backbone of the score, which is what keeps the degree bias out of the ranking.</p>
+      <p>Reprogramming can turn a skin cell into a stem cell. The recipe adds four genes, yet whether it works depends on the cell&rsquo;s own genes, and we know only a handful of them.</p>
+      <p>Two things make this hard. We have only three or four known examples, and every other gene is untested, not proven irrelevant. And the answer changes with the journey: the genes that matter depend on where the cell starts and where it is headed. Existing tools mostly lean on maps of known gene interactions, which favour well-studied genes.</p>
     </section>
 
     <section class="section detail__section" id="approach">
       <h2>Approach</h2>
-      <p>Cells and genes are embedded in one shared space, so a gene can be scored directly against the source&rarr;target direction. The model is still in preparation, so the sketch below is deliberately brief.</p>
       <figure class="figure">
         <img src="../assets/img/fatedriver-architecture.png" alt="FateDriver components: cell encoder, gene encoder, gene scorer, and the loss weighting schedule" width="1520" height="1680">
-        <figcaption>Cell encoder (B), gene encoder (C), gene scorer (D), and the loss weighting schedule (E).</figcaption>
+        <figcaption>The model reads cells (B) and genes (C), then scores each gene for one start-to-end journey (D).</figcaption>
       </figure>
       <ul class="bullets">
-        <li><strong>Cell encoder.</strong> A kNN graph over cells, kept directed by pseudotime, is passed through a GCN &mdash; so the cell space carries the direction of the transition, not just similarity.</li>
-        <li><strong>Gene encoder.</strong> Each gene starts from expression-weighted pooling of the cell embeddings plus a learnable gene embedding, then is refined over the NicheNet prior graph.</li>
-        <li><strong>Gene scorer.</strong> Source and target populations are summarised by a permutation-invariant set encoder; a gene is scored against them by cross-attention, cosine alignment with the transition direction, and a transition prior read from the data.</li>
-        <li><strong>Supervision.</strong> Three ordinal tiers &mdash; delivered factors, downstream genes, then the unlabeled remainder &mdash; treated as a positive&ndash;unlabeled problem, since untested genes are not confirmed negatives.</li>
-        <li><strong>Training.</strong> Reconstruction, ranking, and shift-consistency losses take effect in turn: warm-up, tier activation, then PU refinement.</li>
+        <li><strong>One map for cells and genes.</strong> Cells and genes are placed in the same space, along the direction of the change.</li>
+        <li><strong>Learn from the known switches.</strong> The added genes act as &ldquo;known good&rdquo; examples. Everything else is ranked as unknown, never as wrong.</li>
+        <li><strong>Score for one journey.</strong> Each gene is scored for a specific start-to-end transition, not for the end state alone.</li>
       </ul>
     </section>
 
     <section class="section detail__section" id="results">
       <h2>Results</h2>
-      <p>Benchmarked on three scRNA-seq datasets spanning both conversion systems &mdash; two OSKM-driven human iPSC datasets (GSE297234, GSE242423) and one GMT-driven mouse cardiac dataset (GSE98567) &mdash; against the four existing methods plus an expression-only MLP sharing FateDriver’s labels, splits and objective.</p>      <p><strong>Where do the delivered factors land?</strong> Mean rank out of 3,000 genes, lower is better.</p>      <div class="table-wrap">
-        <table class="table">
-          <caption class="table__note">The MLP shares FateDriver’s labels and evaluation, so the gap comes from the components it lacks, not from the supervision.</caption>
-          <thead>
-            <tr>
-              <th scope="col">Method</th>
-              <th scope="col">GSE297234</th>
-              <th scope="col">GSE242423</th>
-              <th scope="col">GSE98567</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">FateDriver</th>
-              <td><span class="is-best">2.5</span></td>
-              <td><span class="is-best">5.0</span></td>
-              <td><span class="is-best">2.0</span></td>
-            </tr>
-            <tr>
-              <th scope="row">Expression-only MLP</th>
-              <td>6.3</td>
-              <td>632.8</td>
-              <td>33.3</td>
-            </tr>
-            <tr>
-              <th scope="row">CEFCON</th>
-              <td>2.8</td>
-              <td>806.0</td>
-              <td>&mdash;</td>
-            </tr>
-            <tr>
-              <th scope="row">SwitchTFI</th>
-              <td>12.3&ndash;26.7</td>
-              <td>12.3&ndash;26.7</td>
-              <td>12.3&ndash;26.7</td>
-            </tr>
-            <tr>
-              <th scope="row">TENET / Fatecode</th>
-              <td>hundreds&ndash;thousands</td>
-              <td>hundreds&ndash;thousands</td>
-              <td>hundreds&ndash;thousands</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>      <p><strong>Does it recover independently curated regulators?</strong> Scored as AUROC against externally curated reprogramming enhancers and barriers, where 0.5 is chance. FateDriver was highest on two datasets (0.93 and 0.74) and second on the third (0.87). TENET reached 0.90 on one, but ranked only 387 genes and covered three curated positives against ten for FateDriver; its cardiac AUROC was 0.41.</p>      <p><strong>Is it just finding co-expressed genes?</strong> This is the result that separates the two. The MLP produced the top-100 genes most correlated with the delivered factors in every dataset (r = 0.87, 0.96, 0.60) yet recovered <em>less</em> of the curated set than FateDriver, whose own co-expression was low (0.17, 0.15, 0.47). Sharing an expression pattern with the delivered factors and recovering curated regulators do not track each other &mdash; and FateDriver is doing the second, not the first.</p>      <p><strong>A score belongs to a transition, not to a gene.</strong> Two transcriptionally distinct fibroblast states from one heterogeneous culture were scored against a common iPSC target. The rankings differed over four-fifths of their content: 82 genes specific to each state, only 18 shared. Those 18 were the four delivered factors plus the senescence barrier <em>Cdkn1a</em>, <em>Cdkn2a</em> and <em>Serpine1</em>. The two sets also moved in opposite directions along the trajectory &mdash; 79 of 82 baseline-specific genes switched on, 75 of 79 primed-specific genes switched off &mdash; and each kept its direction when scored along a fate axis neither ranking had used.</p>      <p><strong>Partial versus complete reprogramming.</strong> Scored against two endpoints reached from the same fibroblasts, FateDriver returned different gene sets. Among the genes specific to the partial endpoint, <em>DDX58</em> (RIG-I, which initiates the type I interferon response) best separated single cells that activated the endogenous pluripotency program from those that did not (AUROC 0.711 young donor, 0.851 aged). The relationship is graded rather than all-or-none: across eight strata of interferon-stimulated gene score, the fraction of day-10 cells that reprogrammed fell from 32.8% to 1.2% in the young donor and 26.1% to 0.4% in the aged.</p>      <p><strong>Transfer to a dataset with no defined source.</strong> Applied to a population partially reprogrammed <em>in vivo</em> in mouse intestine, FateDriver ranked crypt base columnar cells highest among candidate origins (source affinity 0.396, 1.7&times; the next candidate). CytoTRACE2, an independent measure, scored CBC highest for developmental plasticity &mdash; support from a method that shares none of FateDriver’s assumptions.</p>
+      <p><strong>It finds what experts already know.</strong> Across three datasets, it ranked genes that experts had curated as helpers or barriers of reprogramming at first or second place among six methods.</p>
+      <p><strong>It isn&rsquo;t just finding look-alikes.</strong> A simpler model picked genes that move together with the known switches, yet recovered fewer of the curated genes.</p>
+      <p><strong>The answer depends on the journey.</strong> Changing the starting cell type or the end state gave largely different lists (only 18 of 100 genes shared in one case). For cells stuck partway, it flagged <em>DDX58</em>, a viral-alarm gene whose immune response was linked to cells failing to switch on stem-cell genes.</p>
+      <p><strong>It can guess where a cell came from.</strong> In mouse intestine, it pointed to transit-amplifying cells as the likely origin of one reprogrammed population and enterocytes for another. Independent measures agreed.</p>
+      <p><em>These are predictions to test next, not yet confirmed in the lab.</em></p>
     </section>
 
     <section class="section detail__section" id="cite">
       <h2>Citation</h2>
       <pre class="code"><code>@article{sung2026fatedriver,
-  title   = {FateDriver: A Dual-View Graph Neural Network for Predicting
-             Driver Genes in Cellular Reprogramming},
+  title   = {FateDriver: Weakly supervised dual-view graph learning for
+             transition-specific prioritization of candidate regulators
+             in cellular reprogramming},
   author  = {Sung, Jieun and Son, Kyuwon and Cha, Hyuk-Jin and
              Kim, Wankyu and Lee, Haeseung},
   note    = {Manuscript in preparation. Sung and Son contributed equally},
