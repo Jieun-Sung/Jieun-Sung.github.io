@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jieun Sung — Machine learning for single-cell perturbation</title>
+<meta name="description" content="Jieun Sung, Ph.D. candidate at Ewha Womans University. Deep learning for single-cell perturbation biology and AI-driven drug discovery.">
+<meta name="author" content="Jieun Sung">
+
+<!-- Open Graph / Twitter: the card shown when the link is shared. -->
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Jieun Sung">
+<meta property="og:description" content="Deep learning for single-cell perturbation biology and AI-driven drug discovery.">
+<meta property="og:url" content="https://jieun-sung.github.io/">
+<meta property="og:image" content="https://jieun-sung.github.io/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jieun Sung — Ph.D. Candidate, Systems Pharmacology Laboratory @ Ewha Womans University">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://jieun-sung.github.io/">
+
+<link rel="icon" href="assets/img/favicon.svg?v=2" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= TOP TAB BAR ================= -->
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="#about">Jieun&nbsp;Sung</a>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav__item" href="#about">About</a>
+      <a class="nav__item" href="#research">Research</a>
+      <a class="nav__item" href="#funding">Funding &amp; Awards</a>
+      <a class="nav__item" href="#publications">Publications</a>
+      <a class="nav__item" href="#patents">Patents</a>
+      <a class="nav__item" href="#presentations">Presentations</a>
+      <a class="nav__item" href="#education">Education</a>
+    </nav>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- ================= RAIL ================= -->
+  <header class="rail">
+    <img class="portrait" src="assets/img/portrait_2.png"
+         alt="Jieun Sung" width="1086" height="1448">
+
+    <div>
+      <h1 class="rail__name">Jieun Sung</h1>
+      <p class="rail__role">
+        Ph.D. Candidate, Systems Pharmacology Laboratory<br>
+        @ Ewha Womans University
+      </p>
+    </div>
+
+    <div class="rail__spacer">
+      <ul class="rail__links">
+        <li><a href="mailto:jieunsung928@gmail.com">Email</a></li>
+        <li><a href="https://github.com/Jieun-Sung">GitHub</a></li>
+        <li><a href="https://scholar.google.com/citations?user=XLt997sAAAAJ">Scholar</a></li>
+        <li><a href="https://orcid.org/0009-0007-5845-3423">ORCID</a></li>
+      </ul>
+      <a class="button" href="assets/cv/Jieun-Sung-CV.pdf">Curriculum vitae</a>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main" id="main">
+
+    <!-- ---------- About (landing) ---------- -->
+    <section class="hero" id="about">
+      <p class="eyebrow">About</p>
+      <div class="prose hero__prose">
+        <p>
+          I am an integrated M.S.&ndash;Ph.D. candidate in Bioinformatics at Ewha
+          Womans University, Seoul, South Korea, advised by Prof. Wankyu Kim in
+          the <a href="https://cmsfox.ewha.ac.kr/syspharm/index.do">Systems
+          Pharmacology Laboratory</a>.
+        </p>
+        <p>
+          My research focuses on AI-driven drug and target discovery. I use
+          transcriptomic shifts induced by genetic or pharmacological
+          perturbations to identify potential therapeutic targets with AI. What
+          interests me most is building foundation models that make in silico
+          perturbation experiments genuinely useful for drug discovery.
+        </p>
+      </div>
+    </section>
+
+    <!-- ---------- Research ---------- -->
+    <section class="section" id="research">
+      <div class="section__head">
+        <p class="eyebrow">Research</p>
+        <h2 class="section__title">Selected work</h2>
+        <p class="section__note">
+          Click a figure to open the full method, results and technical detail.
+        </p>
+      </div>
+
+      <article class="entry">
+        <div class="entry__meta">
+          <span class="status status--published">ICML 2026</span>
+          <span class="entry__year">2026</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title"><a href="work/scdebart.html" target="_blank" rel="noopener">scDEBART: Predicting in silico Single-Cell Perturbation Responses via Large-Scale Differential Expression Learning</a></h3>
+          <a class="entry__thumb" href="work/scdebart.html" target="_blank" rel="noopener"
+             aria-label="scDEBART — open the full write-up">
+            <img src="assets/img/thumbs/scdebart.png" alt="scDEBART architecture and benchmark results"
+                 width="1386" height="533" loading="lazy">
+          </a>
+          <p class="entry__lede">
+            A foundation model for single-cell perturbation response, pretrained
+            to predict log fold-changes rather than absolute expression.
+          </p>
+          <ul class="metrics">
+            <li>6.28M DE profiles / 66.6M cells</li>
+            <li>71.4% top-1 reverse perturbation</li>
+            <li>Best DEG recovery on 5 datasets</li>
+          </ul>
+          <ul class="linkrow">
+            <li><a href="https://openreview.net/forum?id=pJyidZg93y">Paper</a></li>
+            <li><a href="assets/posters/2026-07-icml-scdebart.pdf">Poster</a></li>
+            <!-- TODO: confirm the public repo name before launch -->
+            <li><a href="https://github.com/Jieun-Sung/scDEBART">Code</a></li>
+          </ul>
+          <p class="entry__note">
+            Patent applications filed, Republic of Korea &mdash;
+            No. 10-2026-0167782 and No. 10-2026-0167802.
+          </p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry__meta">
+          <span class="status status--review">Under review</span>
+          <span class="entry__year">2026</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title"><a href="work/tdep.html" target="_blank" rel="noopener">TDEP: Predicting Target Perturbation Response from Drug-Induced Transcriptomes</a></h3>
+          <a class="entry__thumb" href="work/tdep.html" target="_blank" rel="noopener"
+             aria-label="TDEP — open the full write-up">
+            <img src="assets/img/thumbs/tdep.png" alt="TDEP model architecture and evaluation"
+                 width="1375" height="534" loading="lazy">
+          </a>
+          <p class="entry__lede">
+            A deep neural network that predicts transcriptome-wide responses to
+            target inhibition, combining pretrained protein language model
+            embeddings with graph attention propagation over a co-expression
+            network under drug&ndash;target interaction supervision.
+          </p>
+          <ul class="metrics">
+            <li>L1000 Connectivity Map</li>
+            <li>AUROC 0.873 unseen drug</li>
+            <li>Explainable AI</li>
+          </ul>
+          <ul class="linkrow">
+            <li><a href="https://www.researchsquare.com/article/rs-10699182/v1">Preprint</a></li>
+            <li><a href="assets/posters/2025-10-ksbi-tdep.pdf">Poster</a></li>
+            <li><a href="https://github.com/Jieun-Sung/TDEP">Code</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.21617259">Archive (Zenodo)</a></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry__meta">
+          <span class="status status--review">Under review</span>
+          <span class="entry__year">2026</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title"><a href="work/fatedriver.html" target="_blank" rel="noopener">FateDriver: Weakly supervised dual-view graph learning for transition-specific prioritization of candidate regulators in cellular reprogramming</a></h3>
+          <a class="entry__thumb" href="work/fatedriver.html" target="_blank" rel="noopener"
+             aria-label="FateDriver — open the full write-up">
+            <img src="assets/img/thumbs/fatedriver.png" alt="FateDriver dual-view graph encoder"
+                 width="1387" height="391" loading="lazy">
+          </a>
+          <p class="entry__lede">
+            Learns from the master-switch genes we already know, then points
+            to the cell&rsquo;s own genes likely to matter for a cell-fate change.
+          </p>
+          <ul class="metrics">
+            <li>Cellular reprogramming</li>
+            <li>Single-cell RNA-seq</li>
+            <li>Graph neural network</li>
+            <li>Weakly supervised learning</li>
+          </ul>
+          <ul class="linkrow">
+            <li><a href="https://www.biorxiv.org/content/10.64898/2026.10.27.762150v1">Preprint</a></li>
+            <li><a href="assets/posters/2026-08-ksscr-fatedriver.pdf">Poster</a></li>
+            <li><a href="https://github.com/Jieun-Sung/FateDriver">Code</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.21771206">Archive (Zenodo)</a></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry__meta">
+          <span class="status status--award">Third place</span>
+          <span class="entry__year">2025</span>
+        </div>
+        <div class="entry__body">
+          <h3 class="entry__title"><a href="work/ic50-ensemble.html" target="_blank" rel="noopener">Sequence-Similarity&ndash;Guided Multi-Representation Ensemble for MAP3K5 IC50 Prediction</a></h3>
+          <a class="entry__thumb" href="work/ic50-ensemble.html" target="_blank" rel="noopener"
+             aria-label="Sequence-similarity-guided IC50 ensemble — open the full write-up">
+            <img src="assets/img/thumbs/ic50-ensemble.png" alt="Uncertainty-aware BLAST-weighted ensemble for IC50 prediction"
+                 width="1345" height="663" loading="lazy">
+          </a>
+          <p class="entry__lede">
+            MAP3K5 inhibitor potency predicted from structure alone, by
+            borrowing labelled data from homologous kinases and weighting it by
+            sequence similarity.
+          </p>
+          <ul class="metrics">
+            <li>3rd of 1,137 participants</li>
+            <li>Uncertainty-based ensemble learning</li>
+          </ul>
+          <ul class="linkrow">
+            <li><a href="assets/posters/2025-10-dacon-ic50.pdf">Poster</a></li>
+          </ul>
+          <p class="entry__note">
+            3rd AI Drug Discovery Competition, Korea Pharmaceutical and
+            Bio-Pharma Association.
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <!-- ---------- Funding & Awards ---------- -->
+    <section class="section" id="funding">
+      <div class="section__head">
+        <p class="eyebrow">Funding &amp; Awards</p>
+        <h2 class="section__title">Grants &amp; competitions</h2>
+      </div>
+
+      <ul>
+        <li class="record">
+          <p class="record__when">2024&ndash;2026</p>
+          <div>
+            <p class="record__title">
+              NRF Ph.D. Student Research Promotion Grant &mdash; Principal Investigator
+            </p>
+            <p class="record__detail">
+              &ldquo;AI-Based Modeling of Drug-Induced Transcriptomic Changes.&rdquo;
+              National Research Foundation of Korea. KRW 50,000,000, awarded to and
+              directed by me as sole PI.
+            </p>
+          </div>
+        </li>
+
+        <li class="record">
+          <p class="record__when">2025</p>
+          <div>
+            <p class="record__title">
+              Third place, 3rd AI Drug Discovery Competition &mdash; 1,137 participants
+            </p>
+            <p class="record__detail">
+              MAP3K5 inhibitor IC50 prediction from molecular structure. An
+              uncertainty-aware ensemble over graph, SMILES, and SELFIES
+              representations, reweighted by PSI-BLAST target sequence similarity.
+              Hosted by the Korea Pharmaceutical and Bio-Pharma Association.
+            </p>
+          </div>
+        </li>
+
+        <li class="record">
+          <p class="record__when">2024</p>
+          <div>
+            <p class="record__title">
+              Second place, 2nd AI Drug Discovery Competition &mdash; 1,798 participants
+            </p>
+            <p class="record__detail">
+              IRAK4 inhibitor IC50 prediction from molecular structure. Hosted by the
+              AI Drug Convergence Research Institute, Korea Pharmaceutical and
+              Bio-Pharma Association.
+            </p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ---------- Publications ---------- -->
+    <section class="section" id="publications">
+      <div class="section__head">
+        <p class="eyebrow">Publications</p>
+        <h2 class="section__title">Papers</h2>
+      </div>
+
+      <ul>
+        <li class="pub">
+          <p class="pub__authors"><strong>Sung, J.</strong> and Kim, W. (2026)</p>
+          <p class="pub__title">
+            scDEBART: Predicting in silico Single-Cell Perturbation Responses via
+            Large-Scale Differential Expression Learning
+          </p>
+          <p class="pub__venue">
+            <em>Proceedings of the 43rd International Conference on Machine Learning
+            (ICML 2026)</em>
+          </p>
+          <ul class="linkrow">
+            <li><a href="https://openreview.net/forum?id=pJyidZg93y">OpenReview</a></li>
+          </ul>
+        </li>
+
+        <li class="pub">
+          <p class="pub__authors"><strong>Sung, J.</strong>, Kim, S., and Kim, W.</p>
+          <p class="pub__title">
+            TDEP: Predicting Target Perturbation Response from Drug-Induced
+            Transcriptomes
+          </p>
+          <p class="pub__venue">
+            Preprint, <em>Research Square</em> (under review at <em>BMC Bioinformatics</em>)
+          </p>
+          <ul class="linkrow">
+            <li><a href="https://www.researchsquare.com/article/rs-10699182/v1">Research Square</a></li>
+          </ul>
+        </li>
+
+        <li class="pub">
+          <p class="pub__authors">
+            <strong>Sung, J.</strong>*, Son, K.*, Cha, H.-J., Kim, W., and Lee, H.
+          </p>
+          <p class="pub__title">
+            FateDriver: Weakly supervised dual-view graph learning for
+            transition-specific prioritization of candidate regulators in
+            cellular reprogramming
+          </p>
+          <p class="pub__venue">Preprint, <em>bioRxiv</em> &middot; *equal contribution</p>
+          <ul class="linkrow">
+            <li><a href="https://www.biorxiv.org/content/10.64898/2026.10.27.762150v1">bioRxiv</a></li>
+            <li><a href="https://github.com/Jieun-Sung/FateDriver">Code</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.21771206">Zenodo</a></li>
+          </ul>
+        </li>
+
+        <li class="pub">
+          <p class="pub__authors"><strong>Sung, J.</strong> and Kim, W.</p>
+          <p class="pub__title">
+            TDEM: Deconvolving Drug-Induced Transcriptomes into Target-Specific
+            Perturbation Profiles via Matrix Factorization
+          </p>
+          <p class="pub__venue">Manuscript in preparation</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ---------- Patents ---------- -->
+    <section class="section" id="patents">
+      <div class="section__head section__head--bare">
+        <h2 class="eyebrow eyebrow--head">Patents</h2>
+      </div>
+
+      <ul>
+        <li class="pub">
+          <p class="pub__authors">Kim, W. and <strong>Sung, J.</strong> (2026)</p>
+          <p class="pub__title">
+            <span lang="ko">전사체 발현 변화 예측을 위한 모델 구축 방법, 학습모델을 이용한 전사체 발현 변화 예측 방법 및 하드웨어장치</span>
+            (Method for Constructing a Model for Predicting Transcriptomic Expression Changes, Method for Predicting Transcriptomic Expression Changes Using a Trained Model, and Hardware Device)
+          </p>
+          <p class="pub__venue">
+            Republic of Korea patent application No. 10-2026-0167782,
+            filed September 3, 2026 &middot; Assignee: Ewha Womans University
+          </p>
+        </li>
+        <li class="pub">
+          <p class="pub__authors">Kim, W. and <strong>Sung, J.</strong> (2026)</p>
+          <p class="pub__title">
+            <span lang="ko">전사체 발현 변화를 유발하는 후보 유전자 예측 방법, 전사체 발현 변화를 유발하는 후보 유전자 세트 예측 방법 및 하드웨어장치</span>
+            (Method for Predicting Candidate Genes Inducing Transcriptomic Expression Changes, Method for Predicting Candidate Gene Sets Inducing Transcriptomic Expression Changes, and Hardware Device)
+          </p>
+          <p class="pub__venue">
+            Republic of Korea patent application No. 10-2026-0167802,
+            filed September 3, 2026 &middot; Assignee: Ewha Womans University
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ---------- Presentations ---------- -->
+    <section class="section" id="presentations">
+      <div class="section__head">
+        <p class="eyebrow">Presentations</p>
+        <h2 class="section__title">Invited &amp; contributed talks</h2>
+        <p class="section__note">First author on all presentations listed.</p>
+      </div>
+
+      <h3 class="subhead">Invited talks</h3>
+      <ul>
+        <li class="record record--tight">
+          <p class="record__when">Sep 2026</p>
+          <div>
+            <p class="record__title">AI-based virtual cell modeling for drug discovery</p>
+            <p class="record__detail">
+              Invited lecture, undergraduate course, Department of AI-Based Drug Development,
+              Duksung Women&rsquo;s University, Seoul
+            </p>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Feb 2026</p>
+          <div>
+            <p class="record__title">Building AI prediction models from biological data</p>
+            <p class="record__detail">
+              Systems Biology Lab, Department of Pharmacy, Pusan National University,
+              Busan
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <h3 class="subhead">Contributed talks &amp; posters</h3>
+      <ul>
+        <li class="record record--tight">
+          <p class="record__when">Aug 2026</p>
+          <div>
+            <p class="record__title">FateDriver &mdash; driver genes in TF-induced reprogramming</p>
+            <p class="record__detail">Korean Society for Stem Cell Research (KSSCR) Annual Meeting &middot; Poster</p>
+            <ul class="linkrow">
+              <li><a href="assets/posters/2026-08-ksscr-fatedriver.pdf">Poster PDF</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Jul 2026</p>
+          <div>
+            <p class="record__title">scDEBART &mdash; in silico single-cell perturbation responses</p>
+            <p class="record__detail">ICML 2026, COEX, Seoul &middot; Poster</p>
+            <ul class="linkrow">
+              <li><a href="assets/posters/2026-07-icml-scdebart.pdf">Poster PDF</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Jun 2026</p>
+          <div>
+            <p class="record__title">FateDriver &mdash; driver genes in TF-induced reprogramming</p>
+            <p class="record__detail">Korean Society for Aging Research Annual Meeting &middot; Poster</p>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Oct 2025</p>
+          <div>
+            <p class="record__title">TDEP &mdash; interpretable drug&ndash;target interaction prediction</p>
+            <p class="record__detail">Korean Society for Bioinformatics (KSBI) Annual Meeting &middot; Poster</p>
+            <ul class="linkrow">
+              <li><a href="assets/posters/2025-10-ksbi-tdep.pdf">Poster PDF</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Sep 2025</p>
+          <div>
+            <p class="record__title">Uncertainty-aware BLAST-weighted ensemble for IC50 prediction</p>
+            <p class="record__detail">3rd AI Drug Discovery Competition &middot; Poster</p>
+            <ul class="linkrow">
+              <li><a href="assets/posters/2025-10-dacon-ic50.pdf">Poster PDF</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Dec 2024</p>
+          <div>
+            <p class="record__title">Deconvolution of drug-induced transcriptomes into single-target effects</p>
+            <p class="record__detail">EJO Symposium &middot; Poster and oral presentation</p>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Oct 2024</p>
+          <div>
+            <p class="record__title">Ensemble learning for IRAK4 inhibitory activity (IC50)</p>
+            <p class="record__detail">2nd AI Drug Discovery Competition &middot; Poster</p>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Jan 2024</p>
+          <div>
+            <p class="record__title">Deconvolution of drug-perturbation transcriptomes by matrix factorization</p>
+            <p class="record__detail">Korea Genome Organization (KOGO) Annual Meeting &middot; Poster</p>
+            <ul class="linkrow">
+              <li><a href="assets/posters/2024-01-kogo-tdem.pdf">Poster PDF</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Nov 2023</p>
+          <div>
+            <p class="record__title">Deconvolution of drug-perturbation transcriptomes by matrix factorization</p>
+            <p class="record__detail">Korean Society for Bioinformatics (KSBI) Annual Meeting &middot; Poster</p>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">May 2023</p>
+          <div>
+            <p class="record__title">Deconvolution of multi-target drug perturbation by matrix factorization</p>
+            <p class="record__detail">Korean Society for Biochemistry and Molecular Biology (KSBMB) Annual Meeting &middot; Poster</p>
+          </div>
+        </li>
+        <li class="record record--tight">
+          <p class="record__when">Oct 2022</p>
+          <div>
+            <p class="record__title">Deconvolution of multi-target drug perturbation with a neural network</p>
+            <p class="record__detail">Korean Society for Bioinformatics (KSBI) Annual Meeting &middot; Poster</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ---------- Education ---------- -->
+    <section class="section" id="education">
+      <div class="section__head">
+        <p class="eyebrow">Education</p>
+        <h2 class="section__title">Background</h2>
+      </div>
+
+      <dl class="deflist deflist--flush">
+        <div>
+          <dt>2027 (expected)</dt>
+          <dd>
+            Integrated M.S.&ndash;Ph.D., Life Science &middot; specialization in Bioinformatics
+            <span>Ewha Womans University &middot; Systems Pharmacology Laboratory &middot; GPA 4.27/4.30</span>
+          </dd>
+        </div>
+        <div>
+          <dt>2021</dt>
+          <dd>
+            B.S., Chemistry &middot; double major in Bioinformatics
+            <span>Ewha Womans University &middot; Academic Excellence Scholarship &middot; Magna cum laude, GPA 3.84/4.30</span>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; <span id="year">2026</span> Jieun Sung</p>
+      <ul>
+        <li><a href="mailto:jieunsung928@gmail.com">jieunsung928@gmail.com</a></li>
+        <li><a href="https://github.com/Jieun-Sung">GitHub</a></li>
+        <li><a href="https://scholar.google.com/citations?user=XLt997sAAAAJ">Scholar</a></li>
+        <li><a href="https://orcid.org/0009-0007-5845-3423">ORCID</a></li>
+      </ul>
+    </footer>
+
+  </main>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

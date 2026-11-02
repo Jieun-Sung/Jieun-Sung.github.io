@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FateDriver — Jieun Sung</title>
+<meta name="description" content="FateDriver: a graph neural network that learns from the known master-switch genes of cellular reprogramming and ranks the cell's own candidate regulators.">
+<meta name="author" content="Jieun Sung">
+<link rel="canonical" href="https://jieun-sung.github.io/work/fatedriver.html">
+
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="../index.html">Jieun&nbsp;Sung</a>
+    <nav class="nav" aria-label="Sections">
+      <a class="nav__item" href="../index.html#research">&larr;&nbsp;All work</a>
+      <a class="nav__item" href="#problem">Problem</a>
+      <a class="nav__item" href="#approach">Approach</a>
+      <a class="nav__item" href="#results">Results</a>
+      <a class="nav__item" href="#cite">Citation</a>
+    </nav>
+  </div>
+</div>
+
+<div class="shell shell--single">
+  <main class="main detail" id="main">
+
+    <header class="detail__head">
+      <div class="entry__meta">
+        <span class="status status--review">Under review</span>
+        <span class="entry__year">2026</span>
+      </div>
+      <h1 class="detail__title">FateDriver: Weakly supervised dual-view graph learning for transition-specific prioritization of candidate regulators in cellular reprogramming</h1>
+      <p class="detail__lede">To turn one kind of cell into another, scientists add a few &ldquo;master switch&rdquo; genes. But the cell&rsquo;s own genes do much of the work too, and most of them are still unknown. FateDriver learns from the switches we already know and points to the other genes likely to matter.</p>
+      <p class="detail__authors">Jieun Sung*, Kyuwon Son*, Hyuk-Jin Cha, Wankyu Kim, Haeseung Lee &middot; *equal contribution &middot; under review</p>
+      <ul class="metrics">
+        <li>Cellular reprogramming</li>
+        <li>Single-cell RNA-seq</li>
+        <li>Graph neural network</li>
+        <li>Weakly supervised learning</li>
+      </ul>
+      <ul class="linkrow">
+        <li><a href="https://www.biorxiv.org/content/10.64898/2026.10.27.762150v1">Preprint</a></li>
+        <li><a href="../assets/posters/2026-08-ksscr-fatedriver.pdf">Poster</a></li>
+        <li><a href="https://github.com/Jieun-Sung/FateDriver">Code</a></li>
+        <li><a href="https://doi.org/10.5281/zenodo.21771206">Archive (Zenodo)</a></li>
+      </ul>
+    </header>
+
+    <figure class="figure figure--hero">
+      <img src="../assets/img/thumbs/fatedriver.png" alt="FateDriver dual-view graph encoder over cells and genes" width="1387" height="391">
+      <figcaption>Cells and genes share one map, so each gene can be scored against the direction of the change.</figcaption>
+    </figure>
+
+    <section class="section detail__section" id="problem">
+      <h2>Problem</h2>
+      <p>Reprogramming can turn a skin cell into a stem cell. The recipe adds four genes, yet whether it works depends on the cell&rsquo;s own genes, and we know only a handful of them.</p>
+      <p>Two things make this hard. We have only three or four known examples, and every other gene is untested, not proven irrelevant. And the answer changes with the journey: the genes that matter depend on where the cell starts and where it is headed. Existing tools mostly lean on maps of known gene interactions, which favour well-studied genes.</p>
+    </section>
+
+    <section class="section detail__section" id="approach">
+      <h2>Approach</h2>
+      <figure class="figure">
+        <img src="../assets/img/fatedriver-architecture.png" alt="FateDriver components: cell encoder, gene encoder, gene scorer, and the loss weighting schedule" width="1520" height="1680">
+        <figcaption>The model reads cells (B) and genes (C), then scores each gene for one start-to-end journey (D).</figcaption>
+      </figure>
+      <ul class="bullets">
+        <li><strong>One map for cells and genes.</strong> Cells and genes are placed in the same space, along the direction of the change.</li>
+        <li><strong>Learn from the known switches.</strong> The added genes act as &ldquo;known good&rdquo; examples. Everything else is ranked as unknown, never as wrong.</li>
+        <li><strong>Score for one journey.</strong> Each gene is scored for a specific start-to-end transition, not for the end state alone.</li>
+      </ul>
+    </section>
+
+    <section class="section detail__section" id="results">
+      <h2>Results</h2>
+      <p><strong>It finds what experts already know.</strong> Across three datasets, it ranked genes that experts had curated as helpers or barriers of reprogramming at first or second place among six methods.</p>
+      <p><strong>It isn&rsquo;t just finding look-alikes.</strong> A simpler model picked genes that move together with the known switches, yet recovered fewer of the curated genes.</p>
+      <p><strong>The answer depends on the journey.</strong> Changing the starting cell type or the end state gave largely different lists (only 18 of 100 genes shared in one case). For cells stuck partway, it flagged <em>DDX58</em>, a viral-alarm gene whose immune response was linked to cells failing to switch on stem-cell genes.</p>
+      <p><strong>It can guess where a cell came from.</strong> In mouse intestine, it pointed to transit-amplifying cells as the likely origin of one reprogrammed population and enterocytes for another. Independent measures agreed.</p>
+      <p><em>These are predictions to test next, not yet confirmed in the lab.</em></p>
+    </section>
+
+    <section class="section detail__section" id="cite">
+      <h2>Citation</h2>
+      <pre class="code"><code>@article{sung2026fatedriver,
+  title   = {FateDriver: Weakly supervised dual-view graph learning for
+             transition-specific prioritization of candidate regulators
+             in cellular reprogramming},
+  author  = {Sung, Jieun and Son, Kyuwon and Cha, Hyuk-Jin and
+             Kim, Wankyu and Lee, Haeseung},
+  note    = {Preprint, bioRxiv. Sung and Son contributed equally},
+  doi     = {10.64898/2026.10.27.762150},
+  year    = {2026}
+}</code></pre>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; <span id="year">2026</span> Jieun Sung</p>
+      <ul>
+        <li><a href="../index.html#research">All work</a></li>
+        <li><a href="mailto:jieunsung928@gmail.com">jieunsung928@gmail.com</a></li>
+        <li><a href="https://github.com/Jieun-Sung">GitHub</a></li>
+      </ul>
+    </footer>
+
+  </main>
+</div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
