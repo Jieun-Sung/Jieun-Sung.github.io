@@ -9,7 +9,7 @@ Naming convention:
 | `2026-08-ksscr-fatedriver.pdf` | FateDriver entry, Presentations |
 | `2026-07-icml-scdebart.pdf` | scDEBART entry, Presentations |
 | `2025-10-ksbi-tdep.pdf` | TDEP entry, Presentations |
-| `2024-01-kogo-tdem.pdf` | TDEM entry, Presentations |
+| `2024-01-kogo-tdem.pdf` | KOGO 2024 entry, Presentations |
 
 All four are single-page, 1.2-4.3 MB, well under the practical limit.
 PowerPoint docinfo (`Title: PowerPoint 프레젠테이션`, `Author: syspharm`)
